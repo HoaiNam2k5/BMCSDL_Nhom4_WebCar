@@ -1,0 +1,28 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="CAR" directorySegmentName="seg_0" id="87331B00-FA32-3A80-54FC-967B0EA2D164">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:31:50 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>714A1D2E-0159-170C-0FF5-08C7DDC513E6</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="CAR_PK" id="DE08E136-F8D0-F037-4D9E-95DE11822C09">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:31:50 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<segment>2D9F9FDB-B170-6872-00D6-95F3CE6DCF6E</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<indexSegment>2D9F9FDB-B170-6872-00D6-95F3CE6DCF6E</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

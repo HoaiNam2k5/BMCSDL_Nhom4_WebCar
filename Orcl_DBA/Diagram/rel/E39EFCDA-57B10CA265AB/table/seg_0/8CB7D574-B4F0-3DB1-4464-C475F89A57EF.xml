@@ -1,0 +1,37 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8CB7D574-B4F0-3DB1-4464-C475F89A57EF" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="CUSTOMER">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>CUSTOMER</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:09 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="39FC97B5-27C3-BADA-732F-C42B058021CA" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="CUSTOMER_PK">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>SYS_C007487</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:09 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<pk>true</pk>
+<indexExpression>MAKH</indexExpression>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="E35FD457-9FA7-9A86-171D-461366A5908D" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="CUSTOMER__UN">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>SYS_C007486</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:09 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexExpression>EMAIL</indexExpression>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,140 @@
+﻿
+
+@model WebCar.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Đăng ký tài khoản
+                    </h3>
+                </div>
+
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "needs-validation" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @* Hiển thị validation summary *@
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.HOTEN, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                @Html.TextBoxFor(m => m.HOTEN, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập họ và tên",
+                                    autocomplete = "name"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.HOTEN, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.EMAIL, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                @Html.TextBoxFor(m => m.EMAIL, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập email",
+                                    type = "email",
+                                    autocomplete = "email"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.EMAIL, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.SDT, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                @Html.TextBoxFor(m => m.SDT, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập số điện thoại",
+                                    type = "tel",
+                                    autocomplete = "tel"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.SDT, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.MATKHAU, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                @Html.PasswordFor(m => m.MATKHAU, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập mật khẩu (tối thiểu 6 ký tự)",
+                                    autocomplete = "new-password"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.MATKHAU, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.XacNhanMatKhau, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                @Html.PasswordFor(m => m.XacNhanMatKhau, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập lại mật khẩu",
+                                    autocomplete = "new-password"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.XacNhanMatKhau, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.DIACHI, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                @Html.TextAreaFor(m => m.DIACHI, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập địa chỉ",
+                                    rows = 2,
+                                    autocomplete = "street-address"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.DIACHI, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Đăng ký
+                            </button>
+                        </div>
+                    }
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Đã có tài khoản?
+                            @Html.ActionLink("Đăng nhập ngay", "Login", "Account", null, new { @class = "text-decoration-none fw-bold" })
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

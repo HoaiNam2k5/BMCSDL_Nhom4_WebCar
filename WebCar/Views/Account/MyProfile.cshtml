@@ -1,0 +1,333 @@
+﻿@model WebCar.Models.CUSTOMER
+
+@{
+    ViewBag.Title = "Hồ Sơ Của Tôi";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="profile-avatar mb-3">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h5 class="mb-1">@Model.HOTEN</h5>
+                    <p class="text-muted mb-2 small">@Model.EMAIL</p>
+                    @if (Session["RoleName"] != null)
+                    {
+                        <span class="badge bg-primary">@Session["RoleName"]</span>
+                    }
+                    <hr />
+                    <div class="text-start">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Tham gia: @(Model.NGAYDANGKY.HasValue ? Model.NGAYDANGKY.Value.ToString("dd/MM/yyyy") : "N/A")
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Sidebar -->
+            <div class="list-group mt-3 shadow-sm">
+                <a href="@Url.Action("MyProfile", "Account")"
+                   class="list-group-item list-group-item-action active">
+                    <i class="fas fa-user me-2"></i> Thông tin cá nhân
+                </a>
+                <a href="@Url.Action("MyOrders", "Order")"
+                   class="list-group-item list-group-item-action">
+                    <i class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
+                </a>
+                <a href="@Url.Action("MyLogs", "Audit")"
+                   class="list-group-item list-group-item-action">
+                    <i class="fas fa-history me-2"></i> Lịch sử hoạt động
+                </a>
+                <a href="@Url.Action("ChangePassword", "Account")"
+                   class="list-group-item list-group-item-action">
+                    <i class="fas fa-key me-2"></i> Đổi mật khẩu
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Success/Error Messages -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Profile Form -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-edit me-2"></i>Thông Tin Cá Nhân
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post,
+                        new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.MAKH)
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-user text-primary me-2"></i>Họ và tên
+                                    <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.HOTEN, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập họ tên đầy đủ",
+                                    required = "required"
+                                })
+                                <div class="invalid-feedback">Vui lòng nhập họ tên</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                                </label>
+                                @Html.TextBoxFor(m => m.EMAIL, new
+                                {
+                                    @class = "form-control bg-light",
+                                    type = "email",
+                                    @readonly = "readonly",
+                                    disabled = "disabled"
+                                })
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>Email không thể thay đổi
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-phone text-primary me-2"></i>Số điện thoại
+                                    <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.SDT, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập số điện thoại",
+                                    pattern = "[0-9]{10,11}",
+                                    required = "required"
+                                })
+                                <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ (10-11 số)</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-calendar text-primary me-2"></i>Ngày đăng ký
+                                </label>
+                                <input type="text"
+                                       class="form-control bg-light"
+                                       value="@(Model.NGAYDANGKY.HasValue ? Model.NGAYDANGKY.Value.ToString("dd/MM/yyyy HH:mm") : "N/A")"
+                                       readonly
+                                       disabled />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>Địa chỉ
+                            </label>
+                            @Html.TextAreaFor(m => m.DIACHI, new
+                            {
+                                @class = "form-control",
+                                rows = "3",
+                                placeholder = "Nhập địa chỉ đầy đủ (số nhà, đường, phường, quận, thành phố)"
+                            })
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Lưu Thay Đổi
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mt-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card text-center shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="stat-icon mb-3">
+                                <i class="fas fa-shopping-cart fa-3x text-primary"></i>
+                            </div>
+                            <h3 class="mb-0">0</h3>
+                            <p class="text-muted mb-0">Đơn hàng</p>
+                            <a href="@Url.Action("MyOrders", "Order")" class="btn btn-sm btn-outline-primary mt-2">
+                                Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card text-center shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="stat-icon mb-3">
+                                <i class="fas fa-star fa-3x text-warning"></i>
+                            </div>
+                            <h3 class="mb-0">0</h3>
+                            <p class="text-muted mb-0">Đánh giá</p>
+                            <button class="btn btn-sm btn-outline-warning mt-2" disabled>
+                                Chưa có
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="card text-center shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="stat-icon mb-3">
+                                <i class="fas fa-history fa-3x text-info"></i>
+                            </div>
+                            <h3 class="mb-0">@(ViewBag.ActivityCount ?? 0)</h3>
+                            <p class="text-muted mb-0">Hoạt động</p>
+                            <a href="@Url.Action("MyLogs", "Audit")" class="btn btn-sm btn-outline-info mt-2">
+                                Xem lịch sử
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .profile-avatar {
+            font-size: 80px;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .list-group-item-action {
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .list-group-item-action:hover {
+            background-color: #f8f9fa;
+            border-left-color: #0066cc;
+            padding-left: 1.5rem;
+        }
+
+        .list-group-item-action.active {
+            background-color: #0066cc;
+            border-color: #0066cc;
+            color: white;
+        }
+
+        .hover-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+            border-color: #0066cc;
+        }
+
+        .stat-icon {
+            animation: pulse 2s infinite;
+        }
+
+
+        .form-control:focus {
+            border-color: #0066cc;
+            box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+        }
+
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            border-bottom: none;
+        }
+
+        .form-label {
+            margin-bottom: 8px;
+        }
+
+        .invalid-feedback {
+            display: none;
+            margin-top: 4px;
+            font-size: 0.875rem;
+        }
+
+        .was-validated .form-control:invalid ~ .invalid-feedback {
+            display: block;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Form validation
+            $('form.needs-validation').on('submit', function (e) {
+                if (!this.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                $(this).addClass('was-validated');
+            });
+
+            // Phone number validation
+            $('input[name="SDT"]').on('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            // Auto hide alerts
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+
+            // Animate cards on hover
+            $('.hover-card').hover(
+                function() {
+                    $(this).find('.stat-icon i').addClass('fa-bounce');
+                },
+                function() {
+                    $(this).find('.stat-icon i').removeClass('fa-bounce');
+                }
+            );
+
+            console.log('✅ MyProfile page loaded!');
+        });
+    </script>
+}

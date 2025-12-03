@@ -1,0 +1,1001 @@
+﻿@model WebCar.Models.ViewModels.ProductDetailViewModel
+
+@{
+    ViewBag.Title = Model.Car.TENXE;
+}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="bg-light py-3">
+    <div class="container">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Product")">Sản phẩm</a></li>
+            <li class="breadcrumb-item active">@Model.Car.TENXE</li>
+        </ol>
+    </div>
+</nav>
+
+<!-- Product Detail Section -->
+<div class="container my-5">
+    <div class="row">
+        <!-- Left: Image Gallery -->
+        <div class="col-lg-6 mb-4">
+            <div class="product-detail-image-wrapper">
+                <!-- Main Image -->
+                <div class="main-image-container mb-3">
+                    <img src="@Url.Content("~/" + Model.Car.HINHANH)"
+                         class="img-fluid rounded shadow-lg main-product-image"
+                         alt="@Model.Car.TENXE"
+                         id="mainImage"
+                         onerror="this.src='@Url.Content("~/images/no-image.jpg")'" />
+
+                    <!-- Badge Status -->
+                    @if (Model.Car.TRANGTHAI == "Con hang")
+                    {
+                        <span class="badge-status-detail badge-available">
+                            <i class="fas fa-check-circle"></i> Còn hàng
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge-status-detail badge-soldout">
+                            <i class="fas fa-times-circle"></i> Hết hàng
+                        </span>
+                    }
+
+                    <!-- Zoom Icon -->
+                    <button class="btn-zoom" onclick="zoomImage()">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                </div>
+
+                <!-- Thumbnail Gallery (Fake 4 images) -->
+                <div class="thumbnail-gallery">
+                    <div class="row g-2">
+                        <div class="col-3">
+                            <img src="@Url.Content("~/" + Model.Car.HINHANH)"
+                                 class="img-thumbnail thumbnail-item active"
+                                 onclick="changeMainImage(this)"
+                                 alt="Ảnh 1">
+                        </div>
+                        <div class="col-3">
+                            <img src="@Url.Content("~/" + Model.Car.HINHANH)"
+                                 class="img-thumbnail thumbnail-item"
+                                 onclick="changeMainImage(this)"
+                                 alt="Ảnh 2">
+                        </div>
+                        <div class="col-3">
+                            <img src="@Url.Content("~/" + Model.Car.HINHANH)"
+                                 class="img-thumbnail thumbnail-item"
+                                 onclick="changeMainImage(this)"
+                                 alt="Ảnh 3">
+                        </div>
+                        <div class="col-3">
+                            <img src="@Url.Content("~/" + Model.Car.HINHANH)"
+                                 class="img-thumbnail thumbnail-item"
+                                 onclick="changeMainImage(this)"
+                                 alt="Ảnh 4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Product Info -->
+        <div class="col-lg-6">
+            <div class="product-detail-info">
+                <!-- Brand -->
+                <div class="product-brand-badge mb-2">
+                    <i class="fas fa-industry"></i> @Model.Car.HANGXE
+                </div>
+
+                <!-- Title -->
+                <h1 class="product-detail-title mb-3">@Model.Car.TENXE</h1>
+
+                <!-- Rating (Fake for now) -->
+                <div class="product-rating mb-3">
+                    <div class="stars">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star-half-alt text-warning"></i>
+                    </div>
+                    <span class="rating-text ms-2">(4.5 / 5) - 127 đánh giá</span>
+                </div>
+
+                <!-- Price -->
+                <div class="product-price-section mb-4">
+                    <div class="current-price">
+                        @string.Format("{0:N0}", Model.Car.GIA ?? 0) <span class="currency">đ</span>
+                    </div>
+                    <div class="price-note">
+                        <i class="fas fa-info-circle"></i> Giá đã bao gồm VAT
+                    </div>
+                </div>
+
+                <!-- Specifications -->
+                <div class="product-specs-section mb-4">
+                    <h5 class="specs-title"><i class="fas fa-clipboard-list"></i> Thông số kỹ thuật</h5>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <div class="spec-label">
+                                <i class="fas fa-calendar-alt"></i> Năm sản xuất
+                            </div>
+                            <div class="spec-value">@Model.Car.NAMSX</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">
+                                <i class="fas fa-bolt"></i> Loại động cơ
+                            </div>
+                            <div class="spec-value">Điện</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">
+                                <i class="fas fa-cog"></i> Hộp số
+                            </div>
+                            <div class="spec-value">Tự động</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">
+                                <i class="fas fa-car"></i> Trạng thái
+                            </div>
+                            <div class="spec-value">
+                                @if (Model.Car.TRANGTHAI == "Con hang")
+                                {
+                                    <span class="text-success fw-bold">Còn hàng</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger fw-bold">Hết hàng</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="product-actions">
+                    @if (Model.CanOrder)
+                    {
+                        <button class="btn btn-primary btn-lg btn-buy">
+                            <i class="fas fa-shopping-cart me-2"></i> Đặt Mua Ngay
+                        </button>
+                        <button class="btn btn-outline-primary btn-lg btn-contact">
+                            <i class="fas fa-phone me-2"></i> Liên Hệ Tư Vấn
+                        </button>
+                    }
+                    else if (!Model.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i> Đăng Nhập Để Đặt Mua
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-lg" disabled>
+                            <i class="fas fa-times-circle me-2"></i> Hết Hàng
+                        </button>
+                    }
+
+                    <button class="btn btn-outline-danger btn-lg btn-wishlist" onclick="toggleWishlist()">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <!-- Features -->
+                <div class="product-features mt-4">
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt text-primary"></i>
+                        <span>Bảo hành chính hãng 3 năm</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-truck text-success"></i>
+                        <span>Miễn phí giao xe tận nhà</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-tools text-warning"></i>
+                        <span>Bảo dưỡng miễn phí 1 năm</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-exchange-alt text-info"></i>
+                        <span>Hỗ trợ đổi trả trong 7 ngày</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs: Description, Specs, Reviews -->
+    <div class="product-tabs mt-5">
+        <ul class="nav nav-tabs nav-fill" id="productTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                        data-bs-target="#description" type="button">
+                    <i class="fas fa-align-left"></i> Mô Tả Chi Tiết
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="specs-tab" data-bs-toggle="tab"
+                        data-bs-target="#specs" type="button">
+                    <i class="fas fa-list"></i> Thông Số Kỹ Thuật
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                        data-bs-target="#reviews" type="button">
+                    <i class="fas fa-star"></i> Đánh Giá (127)
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content p-4 bg-white border border-top-0 rounded-bottom" id="productTabContent">
+            <!-- Description Tab -->
+            <div class="tab-pane fade show active" id="description">
+                <h4 class="mb-3">Giới thiệu về @Model.Car.TENXE</h4>
+                <div class="product-description">
+                    @if (!string.IsNullOrEmpty(Model.Car.MOTA))
+                    {
+                        <p>@Model.Car.MOTA</p>
+                    }
+                    else
+                    {
+                        <p>Chưa có mô tả chi tiết cho sản phẩm này.</p>
+                    }
+
+                    <!-- Fake content -->
+                    <h5 class="mt-4">Điểm nổi bật</h5>
+                    <ul class="highlight-list">
+                        <li><i class="fas fa-check text-success"></i> Động cơ điện hiện đại, thân thiện môi trường</li>
+                        <li><i class="fas fa-check text-success"></i> Thiết kế sang trọng, đẳng cấp</li>
+                        <li><i class="fas fa-check text-success"></i> Công nghệ an toàn tiên tiến</li>
+                        <li><i class="fas fa-check text-success"></i> Hệ thống giải trí thông minh</li>
+                        <li><i class="fas fa-check text-success"></i> Không gian rộng rãi, thoải mái</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Specs Tab -->
+            <div class="tab-pane fade" id="specs">
+                <h4 class="mb-3">Thông Số Kỹ Thuật Chi Tiết</h4>
+                <table class="table table-bordered specs-table">
+                    <tbody>
+                        <tr>
+                            <th width="30%">Hãng xe</th>
+                            <td>@Model.Car.HANGXE</td>
+                        </tr>
+                        <tr>
+                            <th>Năm sản xuất</th>
+                            <td>@Model.Car.NAMSX</td>
+                        </tr>
+                        <tr>
+                            <th>Loại động cơ</th>
+                            <td>Động cơ điện</td>
+                        </tr>
+                        <tr>
+                            <th>Công suất</th>
+                            <td>150 kW (201 hp)</td>
+                        </tr>
+                        <tr>
+                            <th>Dung lượng pin</th>
+                            <td>60 kWh</td>
+                        </tr>
+                        <tr>
+                            <th>Quãng đường di chuyển</th>
+                            <td>400 km (theo WLTP)</td>
+                        </tr>
+                        <tr>
+                            <th>Thời gian sạc</th>
+                            <td>7-8 giờ (AC), 30 phút (DC nhanh 80%)</td>
+                        </tr>
+                        <tr>
+                            <th>Hộp số</th>
+                            <td>Tự động 1 cấp</td>
+                        </tr>
+                        <tr>
+                            <th>Dẫn động</th>
+                            <td>Dẫn động cầu trước (FWD)</td>
+                        </tr>
+                        <tr>
+                            <th>Số chỗ ngồi</th>
+                            <td>5 chỗ</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Reviews Tab -->
+            <div class="tab-pane fade" id="reviews">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="review-summary text-center p-4 bg-light rounded">
+                            <div class="average-rating mb-2">4.5</div>
+                            <div class="stars mb-2">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                            <p class="mb-0">127 đánh giá</p>
+                        </div>
+
+                        @if (Model.IsAuthenticated)
+                        {
+                            <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                <i class="fas fa-edit me-2"></i> Viết Đánh Giá
+                            </button>
+                        }
+                    </div>
+
+                    <div class="col-md-8">
+                        <!-- Review Items (Fake) -->
+                        <div class="review-item">
+                            <div class="d-flex align-items-start">
+                                <div class="review-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="review-content">
+                                    <div class="review-header">
+                                        <strong>Nguyễn Văn A</strong>
+                                        <span class="review-date">15/11/2025</span>
+                                    </div>
+                                    <div class="review-stars">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                    </div>
+                                    <p class="review-text">
+                                        Xe rất đẹp, vận hành êm ái. Mình rất hài lòng với sản phẩm này.
+                                        Đội ngũ tư vấn nhiệt tình, giao xe đúng hẹn.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="review-item">
+                            <div class="d-flex align-items-start">
+                                <div class="review-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="review-content">
+                                    <div class="review-header">
+                                        <strong>Trần Thị B</strong>
+                                        <span class="review-date">12/11/2025</span>
+                                    </div>
+                                    <div class="review-stars">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="far fa-star text-warning"></i>
+                                    </div>
+                                    <p class="review-text">
+                                        Xe tốt, giá hợp lý. Nếu cải thiện thêm về hệ thống giải trí thì sẽ hoàn hảo hơn.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-outline-primary w-100 mt-3">
+                            <i class="fas fa-plus-circle me-2"></i> Xem Thêm Đánh Giá
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (Model.RelatedCars != null && Model.RelatedCars.Any())
+    {
+        <div class="related-products mt-5">
+            <h3 class="section-title mb-4">
+                <i class="fas fa-car"></i> Xe Tương Tự
+            </h3>
+            <div class="row g-4">
+                @foreach (var car in Model.RelatedCars)
+                {
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card product-card h-100 border-0 shadow-sm">
+                            <div class="product-image-wrapper">
+                                <img src="@Url.Content("~/" + car.HINHANH)"
+                                     class="card-img-top"
+                                     alt="@car.TENXE"
+                                     onerror="this.src='@Url.Content("~/images/no-image.jpg")'" />
+                                <div class="product-overlay">
+                                    <a href="@Url.Action("Details", new { id = car.MAXE })"
+                                       class="btn btn-light btn-sm">
+                                        <i class="fas fa-eye me-1"></i> Xem Chi Tiết
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="product-brand mb-2">@car.HANGXE</p>
+                                <h5 class="product-title mb-2">
+                                    <a href="@Url.Action("Details", new { id = car.MAXE })">
+                                        @car.TENXE
+                                    </a>
+                                </h5>
+                                <div class="product-price mb-3">
+                                    <span class="price-value">
+                                        @string.Format("{0:N0}", car.GIA ?? 0) đ
+                                    </span>
+                                </div>
+                                <a href="@Url.Action("Details", new { id = car.MAXE })"
+                                   class="btn btn-primary w-100">
+                                    Xem Chi Tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-star text-warning"></i> Viết Đánh Giá
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="reviewForm">
+                    <div class="mb-3">
+                        <label class="form-label">Đánh giá của bạn</label>
+                        <div class="rating-input">
+                            <i class="far fa-star" data-rating="1"></i>
+                            <i class="far fa-star" data-rating="2"></i>
+                            <i class="far fa-star" data-rating="3"></i>
+                            <i class="far fa-star" data-rating="4"></i>
+                            <i class="far fa-star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="ratingValue" value="0" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nội dung đánh giá</label>
+                        <textarea class="form-control" rows="4" id="reviewContent"
+                                  placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="submitReview()">
+                    <i class="fas fa-paper-plane me-2"></i> Gửi Đánh Giá
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* ==================== PRODUCT DETAIL STYLES ==================== */
+
+        /* Image Section */
+        .product-detail-image-wrapper {
+            position: relative;
+        }
+
+        .main-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+
+        .main-product-image {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+            .main-product-image:hover {
+                transform: scale(1.05);
+            }
+
+        .badge-status-detail {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .badge-available {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-soldout {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-zoom {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+            .btn-zoom:hover {
+                background: #0066cc;
+                color: white;
+                transform: scale(1.1);
+            }
+
+        .thumbnail-gallery {
+            margin-top: 15px;
+        }
+
+        .thumbnail-item {
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+            .thumbnail-item:hover {
+                border-color: #0066cc;
+                transform: scale(1.05);
+            }
+
+            .thumbnail-item.active {
+                border-color: #0066cc;
+            }
+
+        /* Product Info */
+        .product-brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .product-detail-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+        }
+
+        .stars i {
+            font-size: 18px;
+            margin-right: 2px;
+        }
+
+        .rating-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Price */
+        .product-price-section {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .current-price {
+            font-size: 38px;
+            font-weight: 900;
+            color: #dc3545;
+            line-height: 1;
+        }
+
+        .currency {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .price-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* Specs */
+        .specs-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .spec-item {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 3px solid #0066cc;
+        }
+
+        .spec-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+            .spec-label i {
+                margin-right: 6px;
+                color: #0066cc;
+            }
+
+        .spec-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* Action Buttons */
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .btn-buy, .btn-contact {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-wishlist {
+            width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-wishlist i {
+                font-size: 22px;
+            }
+
+            .btn-wishlist.active {
+                background: #dc3545;
+                border-color: #dc3545;
+                color: white;
+            }
+
+                .btn-wishlist.active i::before {
+                    content: "\f004";
+                }
+
+        /* Features */
+        .product-features {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+            .feature-item:last-child {
+                border-bottom: none;
+            }
+
+            .feature-item i {
+                font-size: 20px;
+                width: 30px;
+            }
+
+            .feature-item span {
+                font-size: 14px;
+                color: #333;
+            }
+
+        /* Tabs */
+        .product-tabs {
+            margin-top: 60px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #666;
+            font-weight: 600;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+        }
+
+            .nav-tabs .nav-link:hover {
+                color: #0066cc;
+            }
+
+            .nav-tabs .nav-link.active {
+                background: white;
+                color: #0066cc;
+                border-bottom: 3px solid #0066cc;
+            }
+
+        .tab-content {
+            min-height: 300px;
+        }
+
+        .highlight-list {
+            list-style: none;
+            padding: 0;
+        }
+
+            .highlight-list li {
+                padding: 10px 0;
+                font-size: 15px;
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+                .highlight-list li i {
+                    margin-right: 12px;
+                    font-size: 18px;
+                }
+
+        .specs-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .specs-table td {
+            font-size: 15px;
+        }
+
+        /* Reviews */
+        .average-rating {
+            font-size: 56px;
+            font-weight: 900;
+            color: #0066cc;
+        }
+
+        .review-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .review-avatar {
+            font-size: 40px;
+            color: #ddd;
+            margin-right: 15px;
+        }
+
+        .review-content {
+            flex: 1;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+            .review-header strong {
+                font-size: 15px;
+                color: #1a1a1a;
+            }
+
+        .review-date {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .review-stars i {
+            font-size: 14px;
+            margin-right: 2px;
+        }
+
+        .review-text {
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Rating Input */
+        .rating-input {
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+            .rating-input i {
+                color: #ddd;
+                transition: color 0.2s ease;
+                margin-right: 8px;
+            }
+
+                .rating-input i:hover,
+                .rating-input i.active {
+                    color: #ffc107;
+                }
+
+        /* Related Products */
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1a1a1a;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #0066cc;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @@media (max-width: 991px) {
+            .product-detail-title {
+                font-size: 26px;
+            }
+
+            .current-price {
+                font-size: 32px;
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .btn-buy, .btn-contact {
+                min-width: 100%;
+            }
+
+            .btn-wishlist {
+                width: 100%;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .main-product-image {
+                height: 300px;
+            }
+
+            .product-detail-title {
+                font-size: 22px;
+            }
+
+            .current-price {
+                font-size: 28px;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Change main image when clicking thumbnail
+        function changeMainImage(img) {
+            $('#mainImage').attr('src', $(img).attr('src'));
+            $('.thumbnail-item').removeClass('active');
+            $(img).addClass('active');
+        }
+
+        // Zoom image
+        function zoomImage() {
+            var imgSrc = $('#mainImage').attr('src');
+            window.open(imgSrc, '_blank');
+        }
+
+        // Toggle wishlist
+        function toggleWishlist() {
+            $('.btn-wishlist').toggleClass('active');
+            var isActive = $('.btn-wishlist').hasClass('active');
+
+            if (isActive) {
+                alert('Đã thêm vào danh sách yêu thích!');
+            } else {
+                alert('Đã xóa khỏi danh sách yêu thích!');
+            }
+        }
+
+        // Rating input
+        $('.rating-input i').on('click', function() {
+            var rating = $(this).data('rating');
+            $('#ratingValue').val(rating);
+
+            $('.rating-input i').removeClass('active fas').addClass('far');
+            $(this).prevAll().addBack().removeClass('far').addClass('fas active');
+        });
+
+        $('.rating-input i').hover(
+            function() {
+                $(this).prevAll().addBack().removeClass('far').addClass('fas');
+            },
+            function() {
+                $('.rating-input i').removeClass('fas').addClass('far');
+                var rating = $('#ratingValue').val();
+                if (rating > 0) {
+                    $('.rating-input i').slice(0, rating).removeClass('far').addClass('fas active');
+                }
+            }
+        );
+
+        // Submit review
+        function submitReview() {
+            var rating = $('#ratingValue').val();
+            var content = $('#reviewContent').val();
+
+            if (rating == 0) {
+                alert('Vui lòng chọn số sao đánh giá!');
+                return;
+            }
+
+            if (content.trim() == '') {
+                alert('Vui lòng nhập nội dung đánh giá!');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AddFeedback", "Product")',
+                type: 'POST',
+                data: {
+                    carId: @Model.Car.MAXE,
+                    content: content,
+                    rating: rating
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('Cảm ơn bạn đã đánh giá!');
+                        $('#reviewModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại!');
+                }
+            });
+        }
+
+        // Buy button
+        $('.btn-buy').on('click', function() {
+            alert('Chức năng đặt mua đang được phát triển!');
+        });
+
+        // Contact button
+        $('.btn-contact').on('click', function() {
+            alert('Hotline tư vấn: 1900 23 23 89');
+        });
+    </script>
+}

@@ -1,0 +1,732 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VF3</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="~/Content/CSS/VF3.css" rel="stylesheet" />
+    @{
+        Layout = "~/Views/Shared/_Layout_Vf3.cshtml";
+    }
+
+</head>
+<body>
+
+
+
+    <!-- Overview Section -->
+    <section id="overview" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="image-gallery">
+                        <img src="~/images/vf3do.jpg"
+                             alt="VF3" class="main-image" id="mainImage" onclick="openFullscreen()">
+
+                        <button class="carousel-controls prev-btn" onclick="prevImage()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-controls next-btn" onclick="nextImage()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="thumbnail-container">
+                        <img src="~/images/vf3do.jpg"
+                             class="thumbnail active" onclick="changeImage(0, this)">
+                        <img src="~/images/vf3deb.jpg"
+                             class="thumbnail" onclick="changeImage(1, this)">
+                        <img src="~/images/vf3trang.jpg"
+                             class="thumbnail" onclick="changeImage(2, this)">
+
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="">
+                        <h1 class="h2 fw-bold mb-1">VF3</h1>
+                        <div class="price mb-4">299.000.000đ</div>
+
+                        <ul class="specs-list mb-2">
+                            <li>
+                                <span><strong>Số chỗ ngồi:</strong></span>
+                                <span>4 chỗ</span>
+                            </li>
+                            <li>
+                                <span><strong>Kiểu dáng:</strong></span>
+                                <span>MiniCar</span>
+                            </li>
+                            <li>
+                                <span><strong>Nhiên liệu:</strong></span>
+                                <span>Điện</span>
+                            </li>
+                            <li>
+                                <span><strong>Xuất xứ:</strong></span>
+                                <span>Xe trong nước</span>
+                            </li>
+                            <li>
+                                <span><strong>Số tay:</strong></span>
+                                <span>Tự động</span>
+                            </li>
+                            <li>
+                                <span><strong>Động cơ điện dung tích:</strong></span>
+                                <span>1.496 cm3</span>
+                            </li>
+                        </ul>
+
+                        <button class="btn hotline-btn w-100" onclick="window.location.href='datcoc.html'">
+                            <i class="fas fa-phone-alt me-2" onclick=""></i>
+                            Đặt cọc
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="fullscreen-modal" id="fullscreenModal" onclick="closeFullscreen()">
+        <span class="close-btn">&times;</span>
+        <img src="" alt="Full Image" class="fullscreen-image" id="fullscreenImage" onclick="event.stopPropagation()">
+
+        <div class="fullscreen-controls fullscreen-prev" onclick="event.stopPropagation(); prevImage()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="fullscreen-controls fullscreen-next" onclick="event.stopPropagation(); nextImage()">
+            <i class="fas fa-chevron-right"></i>
+        </div>
+
+        <div class="image-counter" id="imageCounter">1 / 5</div>
+    </div>
+
+
+    <!-- Exterior Section -->
+    <section id="exterior" class="section">
+        <div class="container">
+            <!-- Main Content Row -->
+            <div class="main-content">
+                <!-- Left Content -->
+                <div class="left-content">
+                    <h2 class="section-title">NGOẠI THẤT</h2>
+                    <div class="description">
+                        Với thiết kế tối giản, nhỏ gọn, cá tính và năng động, VinFast VF 3 sẽ luôn cùng bạn hoà nhịp với xu thế công nghệ di chuyển xanh toàn cầu, trải nghiệm giá trị trên mỗi hành trình, và tự do thể hiện phong cách sống.
+                    </div>
+                </div>
+
+                <!-- Right Content -->
+                <div class="right-content">
+                    <!-- Main Image -->
+                    <video autoplay muted loop playsinline preload="auto" alt="vf3 ngoại thất"
+                           class="main-image"
+                           onclick="openFullscreen(this.src)"
+                           id="mainExteriorImage">
+                        "
+                        style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;">
+                        <source src="~/video/vf3.mp4" type="video/mp4">
+                        <!-- Hoặc nếu file nằm ở thư mục khác: -->
+                        <!-- <source src="~/images/baohanh.mp4" type="video/mp4"> -->
+                        Trình duyệt của bạn không hỗ trợ video.
+                    </video>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </section>
+
+    <!-- Interior Section -->
+    <section id="interior" class="section">
+        <div class="container">
+            <!-- Main Content Row -->
+            <div class="main-content">
+                <!-- Left Content - Main Image -->
+                <div class="right-content">
+                    <img src="~/images/noithatvf3.jpg"
+                         alt="vf3 nội thất"
+                         class="main-image"
+                         onclick="openFullscreen(this.src)"
+                         id="mainInteriorImage">
+                </div>
+
+                <!-- Right Content - Title & Description -->
+                <div class="right-content">
+                    <h2 class="section-title">NỘI THẤT</h2>
+                    <div class="description">
+                        Thiết kế thông minh và không gian nội thất tối ưu hóa của VF 3 mang lại trải nghiệm di chuyển tiện lợi, đảm bảo sự thoải mái và tiện nghi cho cả 4 chỗ ngồi. Màu sắc nội thất trang nhã, trẻ trung và cá tính, cùng chất liệu thân thiện tạo ra một không gian đặc biệt, nơi chứa đựng những kỷ niệm đáng nhớ trên mọi hành trình khám phá phong cách sống của riêng bạn!
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <!-- Specifications Section -->
+    <section id="specs" class="section">
+        <div class="container">
+            <h2 class="section-title">THÔNG SỐ KỸ THUẬT</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="specs-container">
+                        <table class="table table-striped table-specs mb-0">
+                            <tbody>
+                                <tr>
+                                    <th rowspan="9" class="text-center">Kích thước</th>
+                                    <td>Kích thước tổng thể bên ngoài (D x R x C) (mm x mm x mm)</td>
+                                    <td><strong>4425x1730x1475</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Kích thước tổng thể bên trong (D x R x C) (mm x mm x mm)</td>
+                                    <td><strong>1895x1420x1205</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Chiều dài cơ sở (mm)</td>
+                                    <td><strong>2550</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Chiều rộng cơ sở (Trước/ sau) (mm)</td>
+                                    <td><strong>1475/1460</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Khoảng sáng gầm xe (mm)</td>
+                                    <td><strong>133</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Góc thoát (Trước/Sau) (độ/degree)</td>
+                                    <td><strong>N/A</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Bán kính vòng quay tối thiểu (m)</td>
+                                    <td><strong>5.1</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Trọng lượng không tải (kg)</td>
+                                    <td><strong>1075</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Trọng lượng toàn tải (kg)</td>
+                                    <td><strong>1550</strong></td>
+                                </tr>
+                                <tr>
+                                    <th>Nhiên liệu</th>
+                                    <td>Dung tích bình nhiên liệu (L)</td>
+                                    <td><strong>42</strong></td>
+                                </tr>
+                                <tr>
+                                    <th>Hàng ghế</th>
+                                    <td>Kích thước khoang chở hàng (D x R x C) (mm)</td>
+                                    <td><strong>N/A</strong></td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="8" class="text-center">Động cơ</th>
+                                    <td>Loại động cơ</td>
+                                    <td><strong>4 xi-lanh thẳng hàng, 16 van, DOHC</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Dung tích xi-lanh (cc)</td>
+                                    <td><strong>1496</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Công suất tối đa (HP/rpm)</td>
+                                    <td><strong>107/6000</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Mô-men xoắn tối đa (Nm/rpm)</td>
+                                    <td><strong>140/4200</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống nhiên liệu</td>
+                                    <td><strong>Phun xăng điện tử</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hộp số</td>
+                                    <td><strong>Số sàn 5 cấp</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống dẫn động</td>
+                                    <td><strong>Cầu trước</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Mức tiêu thụ nhiên liệu (l/100km)</td>
+                                    <td><strong>5.2</strong></td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="6" class="text-center">Hệ thống treo</th>
+                                    <td>Hệ thống treo trước</td>
+                                    <td><strong>MacPherson</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống treo sau</td>
+                                    <td><strong>Thanh xoắn</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống phanh trước</td>
+                                    <td><strong>Đĩa thông gió</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống phanh sau</td>
+                                    <td><strong>Tang trống</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Trợ lực lái</td>
+                                    <td><strong>Trợ lực điện</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Kích thước lốp</td>
+                                    <td><strong>185/60R15</strong></td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="12" class="text-center">Trang bị an toàn</th>
+                                    <td>Túi khí</td>
+                                    <td><strong>2 túi khí</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống chống bó cứng phanh ABS</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống phân phối lực phanh điện tử EBD</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống hỗ trợ phanh khẩn cấp BA</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống cân bằng điện tử VSC</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống kiểm soát lực kéo TRC</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống hỗ trợ khởi hành ngang dốc HAC</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Dây an toàn</td>
+                                    <td><strong>5 dây an toàn 3 điểm</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Khóa cửa trẻ em</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Cảnh báo không thắt dây an toàn</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Immobilizer</td>
+                                    <td><strong>Có</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Cảm biến lùi</td>
+                                    <td><strong>Không</strong></td>
+                                </tr>
+                                <tr>
+                                    <th rowspan="8" class="text-center">Tiện nghi</th>
+                                    <td>Điều hòa</td>
+                                    <td><strong>Điều hòa 1 vùng, chỉnh cơ</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Màn hình giải trí</td>
+                                    <td><strong>Màn hình cảm ứng 7 inch</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Hệ thống âm thanh</td>
+                                    <td><strong>4 loa</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Kết nối</td>
+                                    <td><strong>USB, Bluetooth, AUX</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Khởi động bằng nút bấm</td>
+                                    <td><strong>Không</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Chìa khóa thông minh</td>
+                                    <td><strong>Không</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Cửa sổ trời</td>
+                                    <td><strong>Không</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Ghế bọc da</td>
+                                    <td><strong>Không</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section bg-light">
+        <div class="container">
+            <h2 class="section-title">DỰ TÍNH CHI PHÍ</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="feature-card">
+                        <div class="mb-4">
+                            <label class="form-label h6">Nơi đăng ký:</label>
+                            <select class="form-select form-select-lg" id="citySelect">
+                                <option value="Hà Nội" selected>Hà Nội</option>
+                                <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+
+                            </select>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="cost-table">
+                                    <tr>
+                                        <th style="width: 70%;">Hạng mục</th>
+                                        <th class="text-end">Giá tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Giá đảm phẩm:</td>
+                                        <td class="text-end cost-amount" id="giaXe">299.000.000 đ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí trước bạ (12%):</td>
+                                        <td class="text-end cost-amount" id="phiTruocBa">63.720.000 đ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí sử dụng đường bộ (01 năm):</td>
+                                        <td class="text-end cost-amount" id="phiDuongBo">1.560.000 đ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bảo hiểm trách nhiệm dân sự (01 năm):</td>
+                                        <td class="text-end cost-amount" id="baoHiem">437.000 đ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí đăng ký biển số:</td>
+                                        <td class="text-end cost-amount" id="phiBienSo">20.000.000 đ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phí đăng kiểm:</td>
+                                        <td class="text-end cost-amount" id="phiDangKiem">340.000 đ</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td><strong>Tổng cộng:</strong></td>
+                                        <td class="text-end total-amount" id="tongCong">300.057.000 đ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Array chứa URLs của các hình ảnh
+        const images = [
+            '/images/vf3do.jpg',
+            '/images/vf3deb.jpg',
+            '/images/vf3trang.jpg'
+        ];
+
+        let currentImageIndex = 0;
+
+        // Function thay đổi ảnh chính
+        function changeImage(index, thumbnailElement) {
+            currentImageIndex = index;
+            const mainImage = document.getElementById('mainImage');
+            const fullscreenImage = document.getElementById('fullscreenImage');
+
+            // Cập nhật ảnh chính
+            mainImage.src = images[index];
+            fullscreenImage.src = images[index];
+
+            // Cập nhật trạng thái active cho thumbnail
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            if (thumbnailElement) {
+                thumbnailElement.classList.add('active');
+            }
+
+            // Cập nhật counter
+            updateCounter();
+        }
+
+        // Function chuyển đến ảnh tiếp theo
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            updateMainImage();
+        }
+
+        // Function chuyển đến ảnh trước đó
+        function prevImage() {
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            updateMainImage();
+        }
+
+        // Function cập nhật ảnh chính và thumbnail active
+        function updateMainImage() {
+            const mainImage = document.getElementById('mainImage');
+            const fullscreenImage = document.getElementById('fullscreenImage');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+
+            // Cập nhật ảnh
+            mainImage.src = images[currentImageIndex];
+            fullscreenImage.src = images[currentImageIndex];
+
+            // Cập nhật thumbnail active
+            thumbnails.forEach((thumb, index) => {
+                thumb.classList.toggle('active', index === currentImageIndex);
+            });
+
+            // Cập nhật counter
+            updateCounter();
+        }
+
+        // Function mở fullscreen
+        function openFullscreen() {
+            const modal = document.getElementById('fullscreenModal');
+            const fullscreenImage = document.getElementById('fullscreenImage');
+
+            fullscreenImage.src = images[currentImageIndex];
+            modal.classList.add('active');
+            updateCounter();
+
+            // Ngăn cuộn trang khi modal mở
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function đóng fullscreen
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreenModal');
+            modal.classList.remove('active');
+
+            // Cho phép cuộn trang trở lại
+            document.body.style.overflow = 'auto';
+        }
+
+        // Function cập nhật counter
+        function updateCounter() {
+            const counter = document.getElementById('imageCounter');
+            counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (e) {
+            const modal = document.getElementById('fullscreenModal');
+            if (modal.classList.contains('active')) {
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        prevImage();
+                        break;
+                    case 'ArrowRight':
+                        nextImage();
+                        break;
+                    case 'Escape':
+                        closeFullscreen();
+                        break;
+                }
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function (e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function (e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const modal = document.getElementById('fullscreenModal');
+            if (modal.classList.contains('active')) {
+                if (touchEndX < touchStartX - 50) {
+                    nextImage(); // Swipe left -> next image
+                }
+                if (touchEndX > touchStartX + 50) {
+                    prevImage(); // Swipe right -> prev image
+                }
+            }
+        }
+
+        // Khởi tạo ảnh chính và counter khi trang load
+        document.addEventListener('DOMContentLoaded', function () {
+            changeImage(0, document.querySelector('.thumbnail.active'));
+        });
+    </script>
+
+
+    <script>
+    // Dữ liệu chi phí cho từng thành phố
+        const cityData = {
+            'Hà Nội': {
+                giaXe: '299.000.000',
+                phiTruocBa: '0',
+                phiDuongBo: '1.560.000',
+                baoHiem: '437.000',
+                phiBienSo: '20.000.000',
+                phiDangKiem: '340.000',
+                tongCong: '321.337.000'
+            },
+            'TP. Hồ Chí Minh': {
+                giaXe: '299.000.000',
+                phiTruocBa: '0',
+                phiDuongBo: '1.560.000',
+                baoHiem: '437.000',
+                phiBienSo: '20.000.000',
+                phiDangKiem: '340.000',
+                tongCong: '321.337.000'
+            },
+
+
+        };
+
+        // Function để cập nhật dữ liệu
+        function updateCostData(city) {
+            const data = cityData[city];
+            if (data) {
+                document.getElementById('giaXe').textContent = data.giaXe + ' đ';
+                document.getElementById('phiTruocBa').textContent = data.phiTruocBa + ' đ';
+                document.getElementById('phiDuongBo').textContent = data.phiDuongBo + ' đ';
+                document.getElementById('baoHiem').textContent = data.baoHiem + ' đ';
+                document.getElementById('phiBienSo').textContent = data.phiBienSo + ' đ';
+                document.getElementById('phiDangKiem').textContent = data.phiDangKiem + ' đ';
+                document.getElementById('tongCong').textContent = data.tongCong + ' đ';
+            }
+        }
+
+        // Event listener cho dropdown
+        document.addEventListener('DOMContentLoaded', function () {
+            const citySelect = document.getElementById('citySelect');
+            citySelect.addEventListener('change', function () {
+                updateCostData(this.value);
+            });
+        });</script>
+
+    <script>
+    let currentSlide = 0;
+        const itemsPerSlide = window.innerWidth <= 768 ? 2 : 4;
+
+        // Function thay đổi ảnh chính
+        function changeMainImage(newSrc, clickedElement) {
+            const mainImage = document.getElementById('mainExteriorImage');
+            mainImage.src = newSrc;
+
+            // Remove active class from all thumbnails
+            document.querySelectorAll('.thumbnail-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked thumbnail
+            clickedElement.classList.add('active');
+        }
+
+        // Function slide ảnh
+        function slide~/images(direction) {
+        const container = document.getElementById('thumbnailContainer');
+        const items = container.querySelectorAll('.thumbnail-item');
+        const totalItems = items.length;
+        const maxSlide = Math.ceil(totalItems / itemsPerSlide) - 1;
+
+        currentSlide += direction;
+
+        // Giới hạn slide
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide > maxSlide) currentSlide = maxSlide;
+
+        // Tính toán transform
+        const slideWidth = 100 / itemsPerSlide;
+        const translateX = -currentSlide * (slideWidth * itemsPerSlide);
+
+        container.style.transform = `translateX(${translateX}%)`;
+
+        // Cập nhật trạng thái nút
+        updateSliderButtons(maxSlide);
+            }
+
+        // Function cập nhật trạng thái nút slider
+        function updateSliderButtons(maxSlide) {
+            const prevBtn = document.querySelector('.slider-btn.prev');
+            const nextBtn = document.querySelector('.slider-btn.next');
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === maxSlide;
+        }
+
+        // Function mở fullscreen
+        function openFullscreen(~/imagesrc) {
+        const modal = document.getElementById('fullscreenModal');
+        const fullscreenImage = document.getElementById('fullscreenImage');
+
+        fullscreenImage.src = ~/imagesrc;
+        modal.classList.add('active');
+
+        // Ngăn cuộn trang khi modal mở
+        document.body.style.overflow = 'hidden';
+            }
+
+        // Function đóng fullscreen
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreenModal');
+            modal.classList.remove('active');
+
+            // Cho phép cuộn trang trở lại
+            document.body.style.overflow = 'auto';
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function (e) {
+            const modal = document.getElementById('fullscreenModal');
+            if (modal.classList.contains('active') && e.key === 'Escape') {
+                closeFullscreen();
+            }
+
+            // Arrow keys for slider
+            if (e.key === 'ArrowLeft') {
+                    slide~/images(-1);
+            } else if (e.key === 'ArrowRight') {
+                    slide~/images(1);
+            }
+        });
+
+        // Initialize slider
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('thumbnailContainer');
+            const items = container.querySelectorAll('.thumbnail-item');
+            const totalItems = items.length;
+            const maxSlide = Math.ceil(totalItems / itemsPerSlide) - 1;
+
+            updateSliderButtons(maxSlide);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            currentSlide = 0;
+            const container = document.getElementById('thumbnailContainer');
+            container.style.transform = 'translateX(0%)';
+
+            const items = container.querySelectorAll('.thumbnail-item');
+            const totalItems = items.length;
+            const newItemsPerSlide = window.innerWidth <= 768 ? 2 : 4;
+            const maxSlide = Math.ceil(totalItems / newItemsPerSlide) - 1;
+
+            updateSliderButtons(maxSlide);
+        });</script>
+</body>
+</html>

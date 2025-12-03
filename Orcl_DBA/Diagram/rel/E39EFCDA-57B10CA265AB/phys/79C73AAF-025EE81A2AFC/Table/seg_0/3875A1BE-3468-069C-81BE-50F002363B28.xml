@@ -1,0 +1,28 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="ENCRYPTION_KEY" directorySegmentName="seg_0" id="3875A1BE-3468-069C-81BE-50F002363B28">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:18 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>CDB6532E-6F96-BB1F-662B-5C991E6EE835</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="ENCRYPTION_KEY_PK" id="15986D36-2A70-2B82-6F66-9467F8B5D232">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:18 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<segment>CA71DDD6-48AD-4885-5D44-CEAF86ED7267</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<indexSegment>CA71DDD6-48AD-4885-5D44-CEAF86ED7267</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

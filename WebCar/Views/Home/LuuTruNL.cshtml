@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VinFast Energy</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/CSS/LTNL.css" rel="stylesheet" />
+</head>
+<body>
+ 
+    <header class="banner">
+        <div class="banner-content">
+            <h1>Giải pháp lưu trữ năng lượng</h1>
+            <h2 class="slogan">VinFast Energy</h2>
+            <a href="#contact" class="btn">Liên hệ tư vấn</a>
+        </div>
+        <img src="~/images/energy.jpg" alt="VinFast Energy" />
+    </header>
+
+    <section class="intro">
+        <div class="row align-items-center">
+            <div class="col-lg-6 intro-text">
+                <h2>GIỚI THIỆU CHUNG</h2>
+                <p>
+                    VinFast Energy là đơn vị hàng đầu về cung cấp giải pháp lưu trữ năng lượng với năng lực toàn diện từ nghiên cứu phát triển đến sản xuất.
+                    VinFast Energy ứng dụng công nghệ pin Lithium-ion hiện đại để cung cấp giải pháp lưu trữ năng lượng đáp ứng các tiêu chuẩn quốc tế về an toàn và hiệu quả.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <img src="~/images/energy2.jpg" />
+            </div>
+        </div>
+    </section>
+
+    <section class="energy-section">
+        <div class="energy-carousel">
+            <div class="carousel-track">
+                <div class="energy-card">
+                    <img src="~/images/energy3.jpg" alt="Icon 1" />
+                    <h3>Tối ưu năng lượng tái tạo</h3>
+                    <p>Các nhà đầu tư năng lượng tái tạo (NLTT) thường đối mặt với rủi ro thất thoát...</p>
+                    <div class="card-highlight">
+                        Giải pháp BESS VinFast Energy đem lại lợi ích trong việc lưu trữ nguồn NLTT, gia tăng tỷ lệ sử dụng điện sạch...
+                    </div>
+                </div>
+                <div class="energy-card">
+                    <img src="~/images/energy4.png" alt="Icon 2" />
+                    <h3>Tối ưu chi phí sử dụng điện</h3>
+                    <p>Nhu cầu tiêu thụ điện ngày càng tăng thúc đẩy xu hướng sử dụng điện hiệu quả hơn.</p>
+                    <div class="card-highlight">
+                        Giải pháp giúp khách hàng chủ động hơn trong việc sử dụng điện năng...
+                    </div>
+                </div>
+
+            </div>
+            <button class="carousel-nav prev">&larr;</button>
+            <button class="carousel-nav next">&rarr;</button>
+        </div>
+
+        <div class="energy-description">
+            <span class="energy-label">ỨNG DỤNG</span>
+            <h2>Các giải pháp phổ biến</h2>
+            <p>
+                Pin lưu trữ năng lượng (BESS) được xem là <span class="text-blue">giải pháp đóng vai trò then chốt</span> trong việc thúc đẩy sử dụng Năng lượng tái tạo.
+            </p>
+            <p>
+                Giải pháp BESS của VinFast Energy có thể <span class="text-blue">linh hoạt mở rộng quy mô</span> để đáp ứng các nhu cầu từ sản xuất, truyền tải và phân phối điện năng.
+            </p>
+        </div>
+    </section>
+
+
+
+
+    <section class="highlights">
+        <h2>VinFast Energy – Nhà cung cấp đáng tin cậy</h2>
+        <div class="highlight-cards">
+            <div class="card"><h4>Giải pháp phù hợp với nhu cầu</h4><p style="color: gray">Thiết kế và tinh chỉnh theo yêu cầu khách hàng.</p></div>
+            <div class="card"><h4>Chế độ bảo hành toàn diện</h4><p style="color: gray">Bảo hành kỹ thuật & dịch vụ chuyên nghiệp tại Việt Nam.</p></div>
+            <div class="card"><h4>Tương thích đa ứng dụng</h4><p style="color: gray">Hỗ trợ Peak Shaving, Renewables Integration, Load Balancing,…</p></div>
+            <div class="card"><h4>Thiết kế linh hoạt dễ mở rộng</h4><p style="color: gray">Dễ dàng tích hợp và mở rộng quy mô hệ thống.</p></div>
+            <div class="card"><h4>Chi phí cạnh tranh</h4><p style="color: gray">Cam kết tối ưu hiệu quả đầu tư lâu dài.</p></div>
+        </div>
+    </section>
+
+
+    <section class="factory-section">
+        <div class="factory-header">
+            <span class="sub-heading">NHÀ MÁY & DÂY CHUYỀN</span>
+            <h2>KHÁM PHÁ NHÀ MÁY SẢN XUẤT</h2>
+        </div>
+        <div class="factory-video-wrapper">
+            <video controls autoplay muted playsinline>
+                <source src="~/video/video.mp4" type="video/mp4" />
+                Trình duyệt của bạn không hỗ trợ video.
+            </video>
+        </div>
+    </section>
+    
+    <script src="bootstrap/JS/bootstrap.min.js"></script>
+    <script>
+        const track = document.querySelector('.carousel-track');
+        const slides = document.querySelectorAll('.energy-card');
+        const nextBtn = document.querySelector('.next');
+        const prevBtn = document.querySelector('.prev');
+
+        let index = 0;
+        const total = slides.length;
+
+        function updateSlide() {
+            const slideWidth = slides[0].getBoundingClientRect().width + 16;
+            track.style.transform = `translateX(-${index * slideWidth}px)`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            index = (index + 1) % total;
+            updateSlide();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            index = (index - 1 + total) % total;
+            updateSlide();
+        });
+
+        setInterval(() => {
+            index = (index + 1) % total;
+            updateSlide();
+        }, 5000);
+
+    </script>
+</body>
+</html>

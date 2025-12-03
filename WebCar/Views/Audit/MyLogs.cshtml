@@ -1,0 +1,240 @@
+﻿@model List<WebCar.Models.ViewModels.AuditLogViewModel>
+
+@{
+    ViewBag.Title = "Lịch Sử Hoạt Động";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Lịch Sử Hoạt Động Của Tôi
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Hiển thị <strong>@Model.Count</strong> hoạt động gần nhất của bạn
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th width="8%">ID</th>
+                                        <th width="20%">Hành Động</th>
+                                        <th width="15%">Bảng</th>
+                                        <th width="25%">Thời Gian</th>
+                                        <th width="15%">IP Address</th>
+                                        <th width="17%">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model)
+                                    {
+                                        <tr>
+                                            <td><span class="badge bg-secondary">#@log.MaLog</span></td>
+                                            <td>
+                                                @if (log.HanhDong == "LOGIN")
+                                                {
+                                                    <span class="badge bg-success px-3 py-2">
+                                                        <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+                                                    </span>
+                                                }
+                                                else if (log.HanhDong == "LOGOUT")
+                                                {
+                                                    <span class="badge bg-secondary px-3 py-2">
+                                                        <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+                                                    </span>
+                                                }
+                                                else if (log.HanhDong == "REGISTER")
+                                                {
+                                                    <span class="badge bg-primary px-3 py-2">
+                                                        <i class="fas fa-user-plus me-1"></i> Đăng ký
+                                                    </span>
+                                                }
+                                                else if (log.HanhDong == "UPDATE")
+                                                {
+                                                    <span class="badge bg-warning px-3 py-2">
+                                                        <i class="fas fa-edit me-1"></i> Cập nhật
+                                                    </span>
+                                                }
+                                                else if (log.HanhDong == "INSERT")
+                                                {
+                                                    <span class="badge bg-info px-3 py-2">
+                                                        <i class="fas fa-plus me-1"></i> Thêm mới
+                                                    </span>
+                                                }
+                                                else if (log.HanhDong == "DELETE")
+                                                {
+                                                    <span class="badge bg-danger px-3 py-2">
+                                                        <i class="fas fa-trash me-1"></i> Xóa
+                                                    </span>
+                                                }
+                                                else if (log.HanhDong == "CHANGE_PASSWORD")
+                                                {
+                                                    <span class="badge bg-dark px-3 py-2">
+                                                        <i class="fas fa-key me-1"></i> Đổi mật khẩu
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-light text-dark px-3 py-2">
+                                                        @log.HanhDong
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="text-primary fw-bold">
+                                                    <i class="fas fa-table me-1"></i>@log.BangTacDong
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-clock text-muted me-2"></i>
+                                                @log.NgayGio.ToString("dd/MM/yyyy HH:mm:ss")
+                                            </td>
+                                            <td>
+                                                <code class="bg-light p-2 rounded">
+                                                    <i class="fas fa-network-wired me-1"></i>@(log.IP ?? "N/A")
+                                                </code>
+                                            </td>
+                                            <td>
+                                                @if (log.NgayGio >= DateTime.Now.AddDays(-1))
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check-circle me-1"></i>Mới
+                                                    </span>
+                                                }
+                                                else if (log.NgayGio >= DateTime.Now.AddDays(-7))
+                                                {
+                                                    <span class="badge bg-info">
+                                                        <i class="fas fa-info-circle me-1"></i>Gần đây
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="fas fa-history me-1"></i>Cũ
+                                                    </span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center py-5">
+                            <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                            <h4>Chưa có lịch sử hoạt động nào</h4>
+                            <p>Các hoạt động của bạn sẽ được ghi lại tại đây.</p>
+                        </div>
+                    }
+
+                    <div class="mt-4">
+                        <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Quay Lại Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Summary -->
+            @if (Model != null && Model.Count > 0)
+            {
+                <div class="card mt-4 shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>Thống Kê Hoạt Động
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-box">
+                                    <i class="fas fa-calendar-day fa-2x text-primary mb-2"></i>
+                                    <h4>@Model.Count(l => l.NgayGio >= DateTime.Now.AddDays(-1))</h4>
+                                    <p class="text-muted mb-0">Hôm nay</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-box">
+                                    <i class="fas fa-calendar-week fa-2x text-success mb-2"></i>
+                                    <h4>@Model.Count(l => l.NgayGio >= DateTime.Now.AddDays(-7))</h4>
+                                    <p class="text-muted mb-0">Tuần này</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-box">
+                                    <i class="fas fa-sign-in-alt fa-2x text-info mb-2"></i>
+                                    <h4>@Model.Count(l => l.HanhDong == "LOGIN")</h4>
+                                    <p class="text-muted mb-0">Đăng nhập</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-box">
+                                    <i class="fas fa-edit fa-2x text-warning mb-2"></i>
+                                    <h4>@Model.Count(l => l.HanhDong == "UPDATE")</h4>
+                                    <p class="text-muted mb-0">Cập nhật</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+
+        .stat-box {
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+            .stat-box:hover {
+                background: #e9ecef;
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .badge {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        code {
+            font-size: 0.85rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            console.log('✅ MyLogs page loaded!');
+
+            // Highlight recent activities
+            $('tbody tr').each(function () {
+                const dateText = $(this).find('td:eq(3)').text();
+                // Add visual effect for recent activities
+            });
+        });
+    </script>
+}

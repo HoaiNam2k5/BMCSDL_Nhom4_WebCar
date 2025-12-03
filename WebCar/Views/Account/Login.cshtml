@@ -1,0 +1,96 @@
+﻿@* =========================================
+      FILE: Views/Account/Login.cshtml
+      HƯỚNG DẪN:
+      1. Right-click vào thư mục Views/Account
+      2. Add → View
+      3. View name: Login
+      4. Template: Empty
+      5. Thay thế toàn bộ code bằng code này
+    ========================================= *@
+
+@model WebCar.Models.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h3 class="mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Đăng nhập
+                    </h3>
+                </div>
+
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "needs-validation" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.EMAIL, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                @Html.TextBoxFor(m => m.EMAIL, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập email",
+                                    type = "email",
+                                    autocomplete = "email"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.EMAIL, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.MATKHAU, new { @class = "form-label fw-bold" })
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                @Html.PasswordFor(m => m.MATKHAU, new
+                                {
+                                    @class = "form-control",
+                                    placeholder = "Nhập mật khẩu",
+                                    autocomplete = "current-password"
+                                })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.MATKHAU, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="form-check mb-3">
+                            @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input" })
+                            @Html.LabelFor(m => m.RememberMe, new { @class = "form-check-label" })
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                Đăng nhập
+                            </button>
+                        </div>
+                    }
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Chưa có tài khoản?
+                            @Html.ActionLink("Đăng ký ngay", "Register", "Account", null,
+                                new { @class = "fw-bold text-decoration-none" })
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

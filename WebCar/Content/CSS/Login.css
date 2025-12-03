@@ -1,0 +1,240 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+    body > .container {
+        flex: 1; /* Chiếm toàn bộ phần còn lại để đẩy footer xuống */
+    }
+
+body {
+    background-color: #f8f9fa;
+}
+
+.login-container {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.brand-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+    .brand-logo img {
+        max-width: 150px;
+    }
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    font-weight: 600;
+}
+
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.social-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.social-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 0;
+    margin: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Tooltip Bubble */
+.footer-bubble {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 14px;
+}
+
+.tooltip-bubble {
+    position: fixed;
+    bottom: 50px;
+    left: 20px;
+    background-color: white;
+    color: #111;
+    padding: 10px 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    max-width: 250px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #888;
+    margin-left: auto;
+}
+
+.tooltip-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+.close-bubble {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.close-btn:hover {
+    color: #ff0000;
+}
+/*footer-----------------------------------------------------------------*/
+.footer {
+    background: white;
+    color: #111;
+    padding: 40px 20px;
+    font-size: 0.95rem;
+}
+
+    .footer .container2 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+.footer-section {
+    flex: 1 1 200px;
+    min-width: 200px;
+}
+
+    .footer-section img.logo-footer {
+        width: 150px;
+        margin-bottom: 15px;
+        background-color: white;
+    }
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+    .footer-links li {
+        margin-bottom: 8px;
+    }
+
+    .footer-links a {
+        color: #111;
+        text-decoration: none;
+    }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+.footer-contact {
+    margin-top: 20px;
+}
+
+.footer-social {
+    margin-top: 20px;
+}
+
+    .footer-social a {
+        color: #111;
+        font-size: 1.2rem;
+        margin-right: 10px;
+        font-size: 20px;
+        color: #333;
+        text-decoration: none;
+    }
+
+@media (max-width: 768px) {
+    .container2 {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section {
+        width: 100%;
+    }
+}
+
+/* Logo nổi bật khi load */
+.logo-highlight {
+    transition: all 0.5s ease-in-out;
+    filter: drop-shadow(0 0 6px #00f0ff); /* ánh sáng nhẹ màu xanh */
+}
+
+    /* Khi hover sẽ đổi màu + glow mạnh hơn */
+    .logo-highlight:hover {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 10px #00f0ff) brightness(1.2);
+    }
+
+@keyframes colorGlow {
+    0% {
+        filter: drop-shadow(0 0 6px #ff0000);
+    }
+
+    33% {
+        filter: drop-shadow(0 0 6px #00ff00);
+    }
+
+    66% {
+        filter: drop-shadow(0 0 6px #0000ff);
+    }
+
+    100% {
+        filter: drop-shadow(0 0 6px #ff0000);
+    }
+}
+
+.logo-highlight {
+    animation: colorGlow 3s infinite;
+    transition: transform 0.3s;
+}
+
+    .logo-highlight:hover {
+        transform: scale(1.1);
+    }

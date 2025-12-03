@@ -1,0 +1,51 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4EE9F251-9E71-58BA-C4A4-DE72947CDCBF" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="ORDER_DETAIL">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>ORDER_DETAIL</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:40 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1E99A34A-6304-8CFA-0371-F7402878F05F" name="PK_ORDER_DETAIL">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>PK_ORDER_DETAIL</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:40 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<pk>true</pk>
+<indexExpression>MADON,MAXE</indexExpression>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="2DD6A6A9-2C56-CDD4-E259-D44946F47BF5" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="PK_ORDER_DETAIL">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>PK_ORDER_DETAIL</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:40 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexExpression>MADON, MAXE</indexExpression>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="D5D442E2-964E-E54D-3775-3FB4BA393447" name="FK_ORDERDETAIL_CAR">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:41 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="A113B1FD-5370-5AF6-3B49-0926A7330CC3" name="FK_ORDERDETAIL_ORDER">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:41 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+</indexes>
+</Table>

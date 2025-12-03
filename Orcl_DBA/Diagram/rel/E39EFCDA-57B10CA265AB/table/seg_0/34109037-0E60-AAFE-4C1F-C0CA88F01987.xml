@@ -1,0 +1,33 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="34109037-0E60-AAFE-4C1F-C0CA88F01987" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="ACCOUNT_ROLE">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>ACCOUNT_ROLE</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:30:36 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C0B2F67F-22CD-B08A-947F-29538FD8335F" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="ACCOUNT_ROLE_PK">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>SYS_C007490</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:30:38 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<pk>true</pk>
+<indexExpression>MATK</indexExpression>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="D34D705F-7248-F50C-33A4-D7938C75665E" name="FK_ROLE_CUSTOMER">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:30:39 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+</indexes>
+</Table>

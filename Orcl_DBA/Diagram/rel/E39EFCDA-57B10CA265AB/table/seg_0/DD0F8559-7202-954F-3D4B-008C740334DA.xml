@@ -1,0 +1,33 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="DD0F8559-7202-954F-3D4B-008C740334DA" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="ORDERS">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>ORDERS</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:47 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="21F059D6-2796-12D0-1717-98F0E9C8B62A" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="ORDERS_PK">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>SYS_C007485</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:47 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<pk>true</pk>
+<indexExpression>MADON</indexExpression>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="3AA99B04-AA3F-0B44-1148-5D052130CADA" name="FK_ORDER_CUSTOMER">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:47 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,40 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="2F8601D7-020C-B9B7-F118-077616318A1F" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="FEEDBACK">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>FEEDBACK</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:27 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="577FC750-C98A-FA2F-AEAE-3B2E1A14D1D0" schemaObject="FC817F4E-52FA-322F-4D78-685FB24DB10C" name="FEEDBACK_PK">
+<sourceConnName>CARSALE</sourceConnName>
+<sourceObjSchema>CARSALE</sourceObjSchema>
+<sourceObjName>SYS_C007493</sourceObjName>
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:27 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<pk>true</pk>
+<indexExpression>MAFB</indexExpression>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="3863BC3D-F9B3-CD34-EEF3-5A75ECE4D74C" name="FK_FEEDBACK_CAR">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:27 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="CAE8C855-1511-D883-11B4-87A6F7C364E8" name="FK_FEEDBACK_CUSTOMER">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:27 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+</indexes>
+</Table>

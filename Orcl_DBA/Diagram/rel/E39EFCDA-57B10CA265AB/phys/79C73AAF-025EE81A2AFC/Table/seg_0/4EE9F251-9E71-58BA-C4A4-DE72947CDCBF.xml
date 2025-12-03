@@ -1,0 +1,50 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="ORDER_DETAIL" directorySegmentName="seg_0" id="4EE9F251-9E71-58BA-C4A4-DE72947CDCBF">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:40 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>CDB6532E-6F96-BB1F-662B-5C991E6EE835</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PK_ORDER_DETAIL" id="2DD6A6A9-2C56-CDD4-E259-D44946F47BF5">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:40 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<segment>CA71DDD6-48AD-4885-5D44-CEAF86ED7267</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_ORDERDETAIL_ORDER" id="A113B1FD-5370-5AF6-3B49-0926A7330CC3">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:41 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_ORDERDETAIL_CAR" id="D5D442E2-964E-E54D-3775-3FB4BA393447">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:41 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_ORDER_DETAIL" id="1E99A34A-6304-8CFA-0371-F7402878F05F">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:40 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<segment>CA71DDD6-48AD-4885-5D44-CEAF86ED7267</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<existingIndex>2DD6A6A9-2C56-CDD4-E259-D44946F47BF5</existingIndex>
+<indexSegment>CA71DDD6-48AD-4885-5D44-CEAF86ED7267</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

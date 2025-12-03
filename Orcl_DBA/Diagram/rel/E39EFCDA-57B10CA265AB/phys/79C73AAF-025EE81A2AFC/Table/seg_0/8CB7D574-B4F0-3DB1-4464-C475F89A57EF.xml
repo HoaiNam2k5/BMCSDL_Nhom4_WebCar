@@ -1,0 +1,41 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="CUSTOMER" directorySegmentName="seg_0" id="8CB7D574-B4F0-3DB1-4464-C475F89A57EF">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:09 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>714A1D2E-0159-170C-0FF5-08C7DDC513E6</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="CUSTOMER_PK" id="39FC97B5-27C3-BADA-732F-C42B058021CA">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:09 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<segment>2D9F9FDB-B170-6872-00D6-95F3CE6DCF6E</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<indexSegment>2D9F9FDB-B170-6872-00D6-95F3CE6DCF6E</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="CUSTOMER__UN" id="E35FD457-9FA7-9A86-171D-461366A5908D">
+<createdBy>Nam</createdBy>
+<createdTime>2025-11-16 12:32:09 UTC</createdTime>
+<ownerDesignName>Diagram</ownerDesignName>
+<schemaObject>FC817F4E-52FA-322F-4D78-685FB24DB10C</schemaObject>
+<segment>2D9F9FDB-B170-6872-00D6-95F3CE6DCF6E</segment>
+<tableSpace>E9234522-615F-E047-89F5-5B6BB06AE159</tableSpace>
+<indexSegment>2D9F9FDB-B170-6872-00D6-95F3CE6DCF6E</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev12c>

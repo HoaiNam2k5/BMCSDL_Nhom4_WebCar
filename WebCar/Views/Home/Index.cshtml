@@ -1,0 +1,314 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles {
+    <link href="~/Content/CSS/home-index.css" rel="stylesheet" />
+}
+
+<!-- Banner Carousel - FULL WIDTH -->
+<div id="vinfastBanner" class="carousel slide" data-bs-ride="carousel" style="height:100vh; margin:0; padding:0;">
+    <!-- Dots phân trang -->
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#vinfastBanner" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#vinfastBanner" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#vinfastBanner" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#vinfastBanner" data-bs-slide-to="3"></button>
+    </div>
+
+    <!-- Ảnh banner -->
+    <div class="carousel-inner" style="height:100vh;">
+        <div class="carousel-item active" style="height:100vh;">
+            <img src="~/images/banner1.png" class="d-block w-100" style="height:100vh; object-fit:cover;" alt="Banner 1" />
+        </div>
+        <div class="carousel-item" style="height:100vh;">
+            <img src="~/images/banner2.jpg" class="d-block w-100" style="height:100vh; object-fit:cover;" alt="Banner 2" />
+        </div>
+        <div class="carousel-item" style="height:100vh;">
+            <img src="~/images/banner3.jpg" class="d-block w-100" style="height:100vh; object-fit:cover;" alt="Banner 3" />
+        </div>
+        <div class="carousel-item" style="height:100vh;">
+            <img src="~/images/banner4.jpg" class="d-block w-100" style="height:100vh; object-fit:cover;" alt="Banner 4" />
+        </div>
+    </div>
+
+    <!-- Nút chuyển trái/phải -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#vinfastBanner" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#vinfastBanner" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Floating Icons - Contact -->
+<div class="floating-icon-wrapper">
+    <a href="https://zalo.me/0971224228" target="_blank" class="floating-icon">
+        <img src="~/images/zalo.jpg" alt="Zalo" width="40" height="40" />
+        <span class="tooltip">Nhắn Tin 😎</span>
+    </a>
+    <a href="tel:0971224228" class="floating-icon">
+        <img src="~/images/phone.jpg" alt="Phone" width="40" height="40" />
+        <span class="tooltip">SĐT 0971224228 😎</span>
+    </a>
+</div>
+
+<!-- Car Carousel Section -->
+<div class="carousel-xe" id="carousel">
+    <div class="slide-track">
+
+        <!-- ==== Slide 1: VF 9 ==== -->
+        <div class="slide">
+            <img src="~/images/car/vf9.png" alt="VF 9" />
+            <div class="meta">
+                <div>
+                    <h4>Dòng xe</h4>
+                    <strong>E-SUV</strong>
+                </div>
+                <div>
+                    <h4>Số chỗ ngồi</h4>
+                    <strong>6-7 chỗ</strong>
+                </div>
+                <div>
+                    <h4>Quãng đường</h4>
+                    <strong>626 km (NEDC)</strong>
+                </div>
+                <div>
+                    <h4>Giá từ</h4>
+                    <strong>1.499.000.000&nbsp;VNĐ</strong>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 9" })'">Đặt cọc</button>
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 9" })'">Xem chi tiết</button>
+            </div>
+        </div>
+
+        <!-- ==== Slide 2: VF 8 ==== -->
+        <div class="slide">
+            <img src="~/images/car/vf8.jpg" alt="VF 8" />
+            <div class="meta">
+                <div>
+                    <h4>Dòng xe</h4>
+                    <strong>D-SUV</strong>
+                </div>
+                <div>
+                    <h4>Số chỗ ngồi</h4>
+                    <strong>5 chỗ</strong>
+                </div>
+                <div>
+                    <h4>Quãng đường</h4>
+                    <strong>471 km</strong>
+                </div>
+                <div>
+                    <h4>Giá từ</h4>
+                    <strong>1.019.000.000&nbsp;VNĐ</strong>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 8" })'">Đặt cọc</button>
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 8" })'">Xem chi tiết</button>
+            </div>
+        </div>
+
+        <!-- ==== Slide 3: VF 3 ==== -->
+        <div class="slide">
+            <img src="~/images/car/vf3.jpg" alt="VF 3" />
+            <div class="meta">
+                <div>
+                    <h4>Dòng xe</h4>
+                    <strong>MiniCar</strong>
+                </div>
+                <div>
+                    <h4>Số chỗ ngồi</h4>
+                    <strong>4 chỗ</strong>
+                </div>
+                <div>
+                    <h4>Quãng đường</h4>
+                    <strong>210 km (NEDC)</strong>
+                </div>
+                <div>
+                    <h4>Giá từ</h4>
+                    <strong>299.000.000&nbsp;VNĐ</strong>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 3" })'">Đặt cọc</button>
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 3" })'">Xem chi tiết</button>
+            </div>
+        </div>
+
+        <!-- ==== Slide 4: VF 5 ==== -->
+        <div class="slide">
+            <img src="~/images/car/vf5.jpg" alt="VF 5" />
+            <div class="meta">
+                <div>
+                    <h4>Dòng xe</h4>
+                    <strong>A-SUV</strong>
+                </div>
+                <div>
+                    <h4>Số chỗ ngồi</h4>
+                    <strong>5 chỗ</strong>
+                </div>
+                <div>
+                    <h4>Quãng đường</h4>
+                    <strong>326,4 km (NEDC)</strong>
+                </div>
+                <div>
+                    <h4>Giá từ</h4>
+                    <strong>529.000.000&nbsp;VNĐ</strong>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 5" })'">Đặt cọc</button>
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 5" })'">Xem chi tiết</button>
+            </div>
+        </div>
+
+        <!-- ==== Slide 5: VF 6 ==== -->
+        <div class="slide">
+            <img src="~/images/car/vf6.png" alt="VF 6" />
+            <div class="meta">
+                <div>
+                    <h4>Dòng xe</h4>
+                    <strong>B-SUV</strong>
+                </div>
+                <div>
+                    <h4>Số chỗ ngồi</h4>
+                    <strong>5 chỗ</strong>
+                </div>
+                <div>
+                    <h4>Quãng đường</h4>
+                    <strong>480 km</strong>
+                </div>
+                <div>
+                    <h4>Giá từ</h4>
+                    <strong>689.000.000&nbsp;VNĐ</strong>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 6" })'">Đặt cọc</button>
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 6" })'">Xem chi tiết</button>
+            </div>
+        </div>
+
+        <!-- ==== Slide 6: VF 7 ==== -->
+        <div class="slide">
+            <img src="~/images/car/vf7.png" alt="VF 7" />
+            <div class="meta">
+                <div>
+                    <h4>Dòng xe</h4>
+                    <strong>C-SUV</strong>
+                </div>
+                <div>
+                    <h4>Số chỗ ngồi</h4>
+                    <strong>5 chỗ</strong>
+                </div>
+                <div>
+                    <h4>Quãng đường</h4>
+                    <strong>496 km</strong>
+                </div>
+                <div>
+                    <h4>Giá từ</h4>
+                    <strong>799.000.000&nbsp;VNĐ</strong>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 7" })'">Đặt cọc</button>
+                <button class="btn" onclick="window.location.href='@Url.Action("Index", "Product", new { search = "VF 7" })'">Xem chi tiết</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Mũi tên điều khiển -->
+    <div class="controls">
+        <button id="prev"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="next"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<!-- Chấm chỉ báo -->
+<div class="indicators" id="indicators"></div>
+
+<!-- Video Section - Bảo hành & Dịch vụ -->
+<div class="video-section">
+    <video autoplay muted loop>
+        <source src="~/Video/vf3.mp4" type="video/mp4" />
+    </video>
+
+    <div class="video-overlay"></div>
+
+    <div class="video-content">
+        <h3>Bảo hành & Dịch vụ</h3>
+        <p>Cam kết chất lượng dịch vụ hàng đầu</p>
+    </div>
+</div>
+
+<!-- Info Boxes Section -->
+<div class="d-flex">
+    <div class="info-box">
+        <img src="~/images/tramsac.jpg" alt="Trạm sạc" />
+        <div class="info-overlay">
+            <h3>Pin & Trạm sạc ô tô điện</h3>
+            <p>VinFast cung cấp giải pháp sạc đa dạng, thuận tiện và nhanh chóng.</p>
+            <a href="@Url.Action("About", "Home")">Xem chi tiết</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <img src="~/images/thietbi.jpg" alt="Thiết bị sạc" />
+        <div class="info-overlay">
+            <h3>Thiết bị sạc tại nhà & sạc theo xe</h3>
+            <p>
+                VinFast cung cấp đa dạng giải pháp sạc để đáp ứng nhu cầu sử dụng của
+                Khách hàng một cách thuận tiện nhất.
+                Khuyến cáo khách hàng sử dụng sạc chính hãng để hạn chế nguy cơ cháy nổ.
+            </p>
+            <a href="@Url.Action("About", "Home")">Xem chi tiết</a>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+    <div class="newsletter-overlay">
+        <h2>Đăng ký nhận thông tin</h2>
+        <p>Đăng ký nhận thông tin chương trình khuyến mãi, dịch vụ VinFast.</p>
+
+        <form class="newsletter-form" onsubmit="return handleNewsletterSubmit(event);">
+            <input type="email" placeholder="Nhập email của bạn" required />
+            <button type="submit">ĐĂNG KÝ</button>
+        </form>
+
+        <p class="note">
+            Bằng cách đăng ký, Quý khách xác nhận đã đọc, hiểu và đồng ý với
+            <a href="@Url.Action("About", "Home")">Chính sách Quyền riêng tư</a> của VinFast.
+        </p>
+    </div>
+</section>
+
+@section scripts {
+    <script src="~/Content/JS/index.js"></script>
+    <script>
+        // Handle newsletter form submission
+        function handleNewsletterSubmit(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('input[type="email"]').value;
+
+            // Show success message
+            alert('Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi thông tin đến email: ' + email);
+
+            // Reset form
+            event.target.reset();
+
+            return false;
+        }
+
+        // Initialize carousel controls
+        $(document).ready(function () {
+            console.log('✅ Index page loaded successfully!');
+        });
+    </script>
+}
