@@ -65,6 +65,7 @@ DATAFILE 'carsale_tbs.dbf' SIZE 100M
 AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED;
 
 -- Tạo user CARSALE
+-- Lưu ý: Thay thế 'your_password' bằng mật khẩu mạnh (tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt)
 CREATE USER CARSALE IDENTIFIED BY your_password
 DEFAULT TABLESPACE CARSALE_TBS
 QUOTA UNLIMITED ON CARSALE_TBS;
@@ -78,6 +79,8 @@ GRANT CONNECT, RESOURCE, DBA TO CARSALE;
 Sử dụng file backup trong thư mục `Orcl_DBA`:
 
 ```bash
+# Thay thế 'your_password' bằng mật khẩu của user CARSALE
+# Thay thế 'your_database' bằng tên Oracle instance của bạn
 sqlplus CARSALE/your_password@your_database @Orcl_DBA/CARSALE_FULL_BACKUP_20250105.sql
 ```
 
@@ -87,6 +90,7 @@ Mở file `WebCar/Web.config` và cập nhật connection string:
 
 ```xml
 <connectionStrings>
+  <!-- Cập nhật Password và Data Source theo cấu hình Oracle của bạn -->
   <add name="Model1" 
        connectionString="User Id=CARSALE;Password=your_password;Data Source=your_oracle_instance"
        providerName="Oracle.ManagedDataAccess.Client" />
@@ -156,13 +160,19 @@ BMCSDL_Nhom4_WebCar/
 
 ## 🔑 Tài Khoản Mặc Định
 
-Sau khi import database, bạn có thể sử dụng các tài khoản sau:
+Sau khi import database, bạn có thể kiểm tra tài khoản admin bằng cách truy vấn:
 
-### Admin
-- **Username**: admin (cần kiểm tra trong database)
-- **Password**: (cần kiểm tra trong database)
+```sql
+-- Xem danh sách tài khoản trong hệ thống
+SELECT * FROM CARSALE.CUSTOMER WHERE ROLENAME = 'Admin';
 
-> ⚠️ **Lưu ý**: Đổi mật khẩu mặc định sau khi đăng nhập lần đầu để đảm bảo bảo mật
+-- Hoặc kiểm tra bảng ACCOUNT_ROLE
+SELECT * FROM CARSALE.ACCOUNT_ROLE WHERE ROLENAME = 'Admin';
+```
+
+> ⚠️ **Lưu ý Bảo Mật**: 
+> - Đổi mật khẩu mặc định ngay sau khi đăng nhập lần đầu
+> - Sử dụng mật khẩu mạnh (tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt)
 
 ## 🔐 Các Tính Năng Bảo Mật
 
