@@ -321,12 +321,95 @@ namespace WebCar.Controllers
         }
 
         // =========================================
+        // =========================================
         // GET: Account/AccessDenied
         // =========================================
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult AccessDenied()
         {
+            // Ghi log ngay khi vào trang
+            if (Session["CustomerId"] != null)
+            {
+                try
+                {
+                    int userId = (int)Session["CustomerId"];
+                    string attemptedUrl = Request.UrlReferrer?.ToString() ?? "Unknown";
+
+                    LogAccessDeniedToDatabase(userId, attemptedUrl);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error logging access denied: {ex.Message}");
+                }
+            }
+
             return View();
+        }
+
+        // =========================================
+        // POST: Account/LogAccessDenied
+        // =========================================
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult LogAccessDenied(string url, string referrer, string userAgent)
+        {
+            try
+            {
+                if (Session["CustomerId"] != null)
+                {
+                    int userId = (int)Session["CustomerId"];
+                    LogAccessDeniedToDatabase(userId, url, referrer, userAgent);
+                }
+
+                return Json(new { success = true, message = "Logged successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // =========================================
+        // HELPER: Log Access Denied to Database
+        // =========================================
+        private void LogAccessDeniedToDatabase(int userId, string url, string referrer = null, string userAgent = null)
+        {
+            try
+            {
+                using (var conn = new Oracle.ManagedDataAccess.Client.OracleConnection(
+                    System.Configuration.ConfigurationManager.ConnectionStrings["Model1"].ConnectionString))
+                {
+                    conn.Open();
+
+                    var cmd = new Oracle.ManagedDataAccess.Client.OracleCommand(@"
+                INSERT INTO AUDIT_LOG (MALOG, MATK, HANHDONG, BANGTACDONG, NGAYGIO, IP)
+                VALUES (SEQ_LOG.NEXTVAL, :matk, :hanhdong, 'ACCESS_DENIED', SYSDATE, :ip)", conn);
+
+                    string actionDetails = $"ACCESS_DENIED: {url}";
+                    if (!string.IsNullOrEmpty(referrer))
+                    {
+                        actionDetails += $" | Referrer: {referrer}";
+                    }
+                    if (!string.IsNullOrEmpty(userAgent))
+                    {
+                        actionDetails += $" | UA: {userAgent.Substring(0, Math.Min(100, userAgent.Length))}";
+                    }
+
+                    cmd.Parameters.Add("matk", Oracle.ManagedDataAccess.Client.OracleDbType.Int32).Value = userId;
+                    cmd.Parameters.Add("hanhdong", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = actionDetails;
+                    cmd.Parameters.Add("ip", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value =
+                        Request.UserHostAddress ?? "Unknown";
+
+                    cmd.ExecuteNonQuery();
+
+                    System.Diagnostics.Debug.WriteLine($"✅ Access denied logged for User #{userId}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Error logging access denied: {ex.Message}");
+            }
         }
 
         // =========================================

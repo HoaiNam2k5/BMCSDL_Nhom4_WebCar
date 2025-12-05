@@ -1,0 +1,511 @@
+﻿@model List<WebCar.Models.CAR>
+
+@{
+    ViewBag.Title = "Quản Lý Sản Phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid mt-5 pt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-car me-2 text-primary"></i>
+                    Quản Lý Sản Phẩm
+                </h2>
+                <div>
+                    <button class="btn btn-success" onclick="showAddProductModal()">
+                        <i class="fas fa-plus me-2"></i>Thêm Sản Phẩm
+                    </button>
+                    <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Quay Lại
+                    </a>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Statistics -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">TỔNG SẢN PHẨM</h6>
+                                    <h3 class="mb-0">@(Model?.Count ?? 0)</h3>
+                                </div>
+                                <i class="fas fa-car fa-2x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">CÒN HÀNG</h6>
+                                    <h3 class="mb-0">@(Model?.Count(c => c. TRANGTHAI == "Con hang") ?? 0)</h3>
+                                </div>
+                                <i class="fas fa-check-circle fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-danger">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">HẾT HÀNG</h6>
+                                    <h3 class="mb-0">@(Model?.Count(c => c.TRANGTHAI == "Het hang") ?? 0)</h3>
+                                </div>
+                                <i class="fas fa-times-circle fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">HÃNG XE</h6>
+                                    <h3 class="mb-0">@(Model?.Select(c => c.HANGXE).Distinct().Count() ??  0)</h3>
+                                </div>
+                                <i class="fas fa-industry fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter & Search -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" id="searchInput" class="form-control"
+                                   placeholder="Tìm kiếm theo tên, hãng... ">
+                        </div>
+                        <div class="col-md-3">
+                            <select id="filterBrand" class="form-select">
+                                <option value="">Tất cả hãng</option>
+                                @if (Model != null)
+                                {
+                                    foreach (var brand in Model.Select(c => c.HANGXE).Distinct().OrderBy(b => b))
+                                    {
+                                        <option value="@brand">@brand</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="filterStatus" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="Con hang">Còn hàng</option>
+                                <option value="Het hang">Hết hàng</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" onclick="applyFilters()">
+                                <i class="fas fa-filter me-2"></i>Lọc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            @if (Model != null && Model.Any())
+            {
+                <div class="row g-4" id="productsGrid">
+                    @foreach (var car in Model)
+                    {
+                        <div class="col-lg-3 col-md-4 col-sm-6 product-item"
+                             data-brand="@car.HANGXE"
+                             data-status="@car.TRANGTHAI"
+                             data-name="@car.TENXE">
+                            <div class="card product-card h-100">
+                                <!-- Image -->
+                                <div class="product-image-wrapper">
+                                    @{
+                                        string imagePath = "";
+                                        if (!string.IsNullOrEmpty(car.HINHANH))
+                                        {
+                                            imagePath = car.HINHANH.StartsWith("images/") ? "~/" + car.HINHANH : "~/images/" + car.HINHANH;
+                                        }
+                                        else
+                                        {
+                                            imagePath = "~/images/no-image.jpg";
+                                        }
+                                    }
+                                    <img src="@Url.Content(imagePath)"
+                                         class="card-img-top"
+                                         alt="@car.TENXE"
+                                         onerror="this.src='@Url.Content("~/images/no-image.jpg")'" />
+
+                                    <!-- Status Badge -->
+                                    <div class="product-badge">
+                                        @if (car.TRANGTHAI == "Con hang")
+                                        {
+                                            <span class="badge bg-success">Còn hàng</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Hết hàng</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Body -->
+                                <div class="card-body">
+                                    <p class="text-muted mb-2">
+                                        <small><i class="fas fa-building me-1"></i>@car.HANGXE</small>
+                                    </p>
+                                    <h6 class="card-title mb-2">@car.TENXE</h6>
+                                    <p class="text-muted mb-2">
+                                        <small><i class="fas fa-calendar me-1"></i>Năm: @car.NAMSX</small>
+                                    </p>
+                                    <h5 class="text-danger mb-3">
+                                        @((car.GIA ??  0). ToString("N0")) VNĐ
+                                    </h5>
+
+                                    <!-- Actions -->
+                                    <div class="btn-group w-100">
+                                        <button class="btn btn-sm btn-outline-primary"
+                                                onclick="editProduct(@car.MAXE)"
+                                                title="Sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info"
+                                                onclick="viewProduct(@car.MAXE)"
+                                                title="Xem">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning"
+                                                onclick="toggleStatus(@car.MAXE,'@car.TRANGTHAI')"
+                                                title="Đổi trạng thái">
+                                            <i class="fas fa-exchange-alt"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                onclick="deleteProduct(@car.MAXE)"
+                                                title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-car fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">Chưa có sản phẩm nào</h5>
+                        <button class="btn btn-primary mt-3" onclick="showAddProductModal()">
+                            <i class="fas fa-plus me-2"></i>Thêm Sản Phẩm Đầu Tiên
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add/Edit Product -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-car me-2"></i><span id="modalTitle">Thêm Sản Phẩm</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="productForm">
+                <div class="modal-body">
+                    <input type="hidden" id="productId" name="MAXE" value="0" />
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Tên xe <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="tenXe" name="TENXE" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Hãng xe <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="hangXe" name="HANGXE" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Giá <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="gia" name="GIA" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Năm sản xuất</label>
+                            <input type="number" class="form-control" id="namSX" name="NAMSX"
+                                   min="2000" max="2030" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Hình ảnh (tên file)</label>
+                            <input type="text" class="form-control" id="hinhAnh" name="HINHANH"
+                                   placeholder="vinfast_vf8.jpg" />
+                            <small class="text-muted">Đặt file trong thư mục images/</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select" id="trangThai" name="TRANGTHAI">
+                                <option value="Con hang">Còn hàng</option>
+                                <option value="Het hang">Hết hàng</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label">Mô tả</label>
+                            <textarea class="form-control" id="moTa" name="MOTA" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .product-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+            .product-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+
+        .product-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+        }
+
+            .product-image-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+
+        .stat-card-small {
+            border-left: 4px solid;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Search
+        $('#searchInput').on('keyup', function() {
+            applyFilters();
+        });
+
+        // Apply filters
+        function applyFilters() {
+            var searchText = $('#searchInput').val().toLowerCase();
+            var filterBrand = $('#filterBrand').val();
+            var filterStatus = $('#filterStatus').val();
+
+            $('. product-item').each(function() {
+                var productName = $(this).data('name'). toLowerCase();
+                var productBrand = $(this).data('brand');
+                var productStatus = $(this).data('status');
+
+                var matchSearch = productName.indexOf(searchText) > -1 || productBrand.toLowerCase().indexOf(searchText) > -1;
+                var matchBrand = filterBrand === '' || productBrand === filterBrand;
+                var matchStatus = filterStatus === '' || productStatus === filterStatus;
+
+                if (matchSearch && matchBrand && matchStatus) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        // Show add product modal
+        function showAddProductModal() {
+            $('#modalTitle').text('Thêm Sản Phẩm');
+            $('#productForm')[0].reset();
+            $('#productId').val(0);
+            $('#productModal').modal('show');
+        }
+
+        // Edit product
+        function editProduct(productId) {
+            $('#modalTitle').text('Sửa Sản Phẩm');
+
+            $.ajax({
+                url: '@Url.Action("GetProductDetail", "Admin")',
+                type: 'GET',
+                data: { id: productId },
+                success: function(response) {
+                    if (response.success) {
+                        var product = response.data;
+                        $('#productId').val(product.maxe);
+                        $('#tenXe').val(product.tenxe);
+                        $('#hangXe').val(product.hangxe);
+                        $('#gia').val(product.gia);
+                        $('#namSX'). val(product.namsx);
+                        $('#hinhAnh'). val(product.hinhanh);
+                        $('#trangThai').val(product.trangthai);
+                        $('#moTa').val(product.mota);
+                        $('#productModal').modal('show');
+                    }
+                },
+                error: function() {
+                    alert('Không thể tải thông tin sản phẩm! ');
+                }
+            });
+        }
+
+        // View product
+        function viewProduct(productId) {
+            window.open('@Url.Action("Details", "Product")/' + productId, '_blank');
+        }
+
+        // Toggle status
+        function toggleStatus(productId, currentStatus) {
+            var newStatus = currentStatus === 'Con hang' ? 'Het hang' : 'Con hang';
+
+            if (confirm('Đổi trạng thái sang "' + newStatus + '"? ')) {
+                $.ajax({
+                    url: '@Url.Action("UpdateProductStatus", "Admin")',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                        productId: productId,
+                        newStatus: newStatus
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra!');
+                    }
+                });
+            }
+        }
+
+        // Delete product
+        function deleteProduct(productId) {
+            if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteProduct", "Admin")',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                        productId: productId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra!');
+                    }
+                });
+            }
+        }
+
+        // Save product
+        $('#productForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var productId = $('#productId').val();
+            var url = productId == 0 ? '@Url.Action("CreateProduct", "Admin")' : '@Url.Action("UpdateProduct", "Admin")';
+
+            var formData = {
+                __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                MAXE: productId,
+                TENXE: $('#tenXe').val(),
+                HANGXE: $('#hangXe'). val(),
+                GIA: $('#gia').val(),
+                NAMSX: $('#namSX'). val(),
+                HINHANH: $('#hinhAnh').val(),
+                TRANGTHAI: $('#trangThai').val(),
+                MOTA: $('#moTa').val()
+            };
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response. message);
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra! ');
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert'). fadeOut('slow');
+            }, 5000);
+
+            console.log('✅ Products Management loaded');
+        });
+    </script>
+}

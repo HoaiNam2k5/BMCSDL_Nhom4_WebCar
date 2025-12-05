@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Access Denied";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="card shadow-lg border-danger">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-ban fa-5x text-danger"></i>
+                    </div>
+                    <h1 class="display-4 text-danger mb-3">403</h1>
+                    <h3 class="mb-4">Access Denied</h3>
+                    <p class="lead text-muted mb-4">
+                        Bạn không có quyền truy cập trang này.
+                    </p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Lý do:</strong> Bạn cần quyền Admin hoặc Manager để truy cập.
+                    </div>
+                    <div class="d-grid gap-2 d-md-block mt-4">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">
+                            <i class="fas fa-home me-2"></i>Về Trang Chủ
+                        </a>
+                        <a href="@Url.Action("Logout", "Account" )" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-sign-out-alt me-2"></i>Đăng Xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Info -->
+            <div class="card mt-4 border-info">
+                <div class="card-body">
+                    <h6 class="text-info">
+                        <i class="fas fa-shield-alt me-2"></i>Thông Tin Bảo Mật
+                    </h6>
+                    <p class="small text-muted mb-0">
+                        Hành động này đã được ghi nhận trong hệ thống audit log.
+                        Nếu bạn tin rằng đây là lỗi, vui lòng liên hệ quản trị viên.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Log access denied attempt
+        $. ajax({
+            url: '@Url.Action("LogAccessDenied", "Account")',
+            type: 'POST',
+            data: {
+                url: window.location.href
+            }
+        });
+
+        console.log('⚠️ Access Denied');
+    </script>
+}

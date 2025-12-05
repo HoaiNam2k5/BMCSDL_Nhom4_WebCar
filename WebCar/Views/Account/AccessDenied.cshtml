@@ -1,0 +1,271 @@
+﻿@{
+    ViewBag.Title = "Access Denied";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Main Error Card -->
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-body p-5 text-center">
+                    <!-- Icon -->
+                    <div class="error-icon mb-4">
+                        <i class="fas fa-shield-alt fa-6x text-danger"></i>
+                        <i class="fas fa-ban fa-3x text-white position-absolute"></i>
+                    </div>
+
+                    <!-- Error Code -->
+                    <h1 class="display-1 fw-bold text-danger mb-3">403</h1>
+
+                    <!-- Title -->
+                    <h2 class="mb-4">Access Denied</h2>
+
+                    <!-- Description -->
+                    <p class="lead text-muted mb-4">
+                        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                        Bạn không có quyền truy cập vào trang này.
+                    </p>
+
+                    <!-- Warning Alert -->
+                    <div class="alert alert-warning text-start mb-4">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-info-circle me-2"></i>Tại sao tôi thấy thông báo này?
+                        </h5>
+                        <hr>
+                        <ul class="mb-0">
+                            <li>Bạn đang cố truy cập vào khu vực quản trị (Admin)</li>
+                            <li>Tài khoản của bạn không có quyền Admin hoặc Manager</li>
+                            <li>Phiên đăng nhập của bạn có thể đã hết hạn</li>
+                        </ul>
+                    </div>
+
+                    <!-- User Info -->
+                    @if (Session["CustomerId"] != null)
+                    {
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-3">Thông tin tài khoản hiện tại:</h6>
+                                <div class="row text-start">
+                                    <div class="col-md-6">
+                                        <p class="mb-2">
+                                            <strong><i class="fas fa-user me-2 text-primary"></i>Tên:</strong>
+                                            @Session["CustomerName"]
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-2">
+                                            <strong><i class="fas fa-envelope me-2 text-primary"></i>Email:</strong>
+                                            @Session["CustomerEmail"]
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-0">
+                                            <strong><i class="fas fa-id-badge me-2 text-primary"></i>ID:</strong>
+                                            #@Session["CustomerId"]
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-0">
+                                            <strong><i class="fas fa-user-tag me-2 text-primary"></i>Role:</strong>
+                                            <span class="badge bg-secondary">@Session["RoleName"]</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg">
+                            <i class="fas fa-home me-2"></i>Về Trang Chủ
+                        </a>
+
+                        @if (Session["CustomerId"] != null)
+                        {
+                            <a href="@Url.Action("MyProfile", "Customer")" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-user me-2"></i>Hồ Sơ Của Tôi
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Đăng Nhập
+                            </a>
+                        }
+                    </div>
+
+                    <!-- Additional Help -->
+                    <div class="mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-question-circle me-1"></i>
+                            Cần trợ giúp? Liên hệ:
+                            <a href="mailto:support@vinfast.com">support@vinfast.com</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="card border-info">
+                <div class="card-body">
+                    <h6 class="text-info mb-3">
+                        <i class="fas fa-shield-alt me-2"></i>Thông Báo Bảo Mật
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <small class="text-muted">
+                                    Hành động này đã được ghi lại trong hệ thống audit log
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-clock text-warning me-2 mt-1"></i>
+                                <small class="text-muted">
+                                    Thời gian: <strong>@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</strong>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-network-wired text-info me-2 mt-1"></i>
+                                <small class="text-muted">
+                                    IP: <strong>@Request.UserHostAddress</strong>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-link text-primary me-2 mt-1"></i>
+                                <small class="text-muted">
+                                    URL: <strong>@Request.UrlReferrer?. PathAndQuery</strong>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <p class="small text-muted mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Nếu bạn nghĩ đây là lỗi hệ thống, vui lòng liên hệ quản trị viên với thông tin trên.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tips Card -->
+            <div class="card border-warning mt-4">
+                <div class="card-body">
+                    <h6 class="text-warning mb-3">
+                        <i class="fas fa-lightbulb me-2"></i>Gợi Ý
+                    </h6>
+                    <ul class="mb-0 small">
+                        <li class="mb-2">
+                            <strong>Khách hàng:</strong> Bạn có thể duyệt sản phẩm, đặt hàng và quản lý đơn hàng của mình
+                        </li>
+                        <li class="mb-2">
+                            <strong>Cần quyền Admin? </strong> Liên hệ quản trị viên để được cấp quyền phù hợp
+                        </li>
+                        <li>
+                            <strong>Đăng xuất? </strong>
+                            <a href="@Url.Action("Logout", "Account")" class="text-decoration-none">
+                                Click vào đây để đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .error-icon {
+            position: relative;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+            .error-icon .fa-ban {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1. 05);
+            }
+        }
+
+        .card {
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+            .card:hover {
+                box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+            }
+
+        .btn-lg {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+
+        .badge {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Log access denied attempt to server
+            logAccessDenied();
+
+            // Show notification
+            console.warn('⚠️ Access Denied - This action has been logged');
+
+            // Optional: Auto redirect after 30 seconds
+            // setTimeout(function() {
+            //     window.location.href = '@Url.Action("Index", "Home")';
+            // }, 30000);
+        });
+
+        function logAccessDenied() {
+            $. ajax({
+                url: '@Url.Action("LogAccessDenied", "Account")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                    url: window.location.href,
+                    referrer: document.referrer,
+                    userAgent: navigator. userAgent
+                },
+                success: function(response) {
+                    if (response.success) {
+                        console.log('✅ Access denied logged successfully');
+                    }
+                },
+                error: function() {
+                    console.error('❌ Failed to log access denied');
+                }
+            });
+        }
+    </script>
+}

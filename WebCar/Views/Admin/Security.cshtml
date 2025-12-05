@@ -1,0 +1,547 @@
+﻿@{
+    ViewBag.Title = "Bảo Mật & Audit Logs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid mt-5 pt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-shield-alt me-2 text-primary"></i>
+                    Bảo Mật & Audit Logs
+                </h2>
+                <div>
+                    <button class="btn btn-success" onclick="exportLogs()">
+                        <i class="fas fa-download me-2"></i>Export Logs
+                    </button>
+                    <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Quay Lại
+                    </a>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">TỔNG LOGS</h6>
+                                    <h3 class="mb-0 text-primary">@ViewBag.TotalLogs</h3>
+                                </div>
+                                <i class="fas fa-database fa-3x text-primary opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-danger">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">LOGIN FAILED</h6>
+                                    <h3 class="mb-0 text-danger">@ViewBag.FailedLogins</h3>
+                                    <small class="text-muted">30 ngày qua</small>
+                                </div>
+                                <i class="fas fa-exclamation-triangle fa-3x text-danger opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">ACTIVE USERS</h6>
+                                    <h3 class="mb-0 text-success" id="activeUsersCount">0</h3>
+                                    <small class="text-muted">24h qua</small>
+                                </div>
+                                <i class="fas fa-users fa-3x text-success opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">ADMIN ACTIONS</h6>
+                                    <h3 class="mb-0 text-warning" id="adminActionsCount">0</h3>
+                                    <small class="text-muted">Hôm nay</small>
+                                </div>
+                                <i class="fas fa-cog fa-3x text-warning opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs mb-4" id="securityTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-logs-tab" data-bs-toggle="tab"
+                            data-bs-target="#all-logs" type="button">
+                        <i class="fas fa-list me-2"></i>Tất Cả Logs
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="login-tab" data-bs-toggle="tab"
+                            data-bs-target="#login-logs" type="button">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login/Logout
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="admin-tab" data-bs-toggle="tab"
+                            data-bs-target="#admin-logs" type="button">
+                        <i class="fas fa-user-shield me-2"></i>Admin Actions
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="security-tab" data-bs-toggle="tab"
+                            data-bs-target="#security-events" type="button">
+                        <i class="fas fa-exclamation-circle me-2"></i>Security Events
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="securityTabContent">
+                <!-- All Logs Tab -->
+                <div class="tab-pane fade show active" id="all-logs">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-history me-2"></i>Tất Cả Audit Logs
+                                    </h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <input type="text" id="searchLogs" class="form-control"
+                                                   placeholder="Tìm kiếm... ">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select id="filterLogType" class="form-select">
+                                                <option value="">Tất cả hành động</option>
+                                                <option value="LOGIN">Login</option>
+                                                <option value="LOGOUT">Logout</option>
+                                                <option value="REGISTER">Register</option>
+                                                <option value="INSERT">Insert</option>
+                                                <option value="UPDATE">Update</option>
+                                                <option value="DELETE">Delete</option>
+                                                <option value="ADMIN_ACTION">Admin Action</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                                <table class="table table-hover table-sm mb-0" id="allLogsTable">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th width="80">ID</th>
+                                            <th width="100">User ID</th>
+                                            <th width="200">Người dùng</th>
+                                            <th>Hành động</th>
+                                            <th width="150">Bảng</th>
+                                            <th width="180">Thời gian</th>
+                                            <th width="120">IP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="logsTableBody">
+                                        <tr>
+                                            <td colspan="7" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span id="logCount">Đang tải...</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-primary" onclick="loadMoreLogs()">
+                                        <i class="fas fa-sync me-2"></i>Tải thêm
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login/Logout Logs Tab -->
+                <div class="tab-pane fade" id="login-logs">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login/Logout History
+                            </h5>
+                        </div>
+                        <div class="card-body" id="loginLogsContent">
+                            <p class="text-muted">Đang tải...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Actions Tab -->
+                <div class="tab-pane fade" id="admin-logs">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user-shield me-2"></i>Admin Actions Log
+                            </h5>
+                        </div>
+                        <div class="card-body" id="adminLogsContent">
+                            <p class="text-muted">Đang tải...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Events Tab -->
+                <div class="tab-pane fade" id="security-events">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Security Events & Threats
+                            </h5>
+                        </div>
+                        <div class="card-body" id="securityEventsContent">
+                            <p class="text-muted">Đang tải...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+
+        #allLogsTable {
+            font-size: 0.9rem;
+        }
+
+            #allLogsTable tbody tr {
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+                #allLogsTable tbody tr:hover {
+                    background-color: #f0f8ff;
+                }
+
+        .log-action-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: white;
+        }
+
+        .nav-tabs .nav-link {
+            color: #666;
+            font-weight: 500;
+        }
+
+            .nav-tabs .nav-link.active {
+                color: #0066cc;
+                font-weight: 600;
+            }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        let currentPage = 1;
+        let isLoading = false;
+
+        $(document).ready(function() {
+            // Load initial data
+            loadAllLogs();
+            loadStatistics();
+
+            // Search functionality
+            $('#searchLogs'). on('keyup', function() {
+                filterLogs();
+            });
+
+            $('#filterLogType').on('change', function() {
+                filterLogs();
+            });
+
+            // Tab change events
+            $('#login-tab').on('shown.bs.tab', function() {
+                loadLoginLogs();
+            });
+
+            $('#admin-tab').on('shown.bs.tab', function() {
+                loadAdminLogs();
+            });
+
+            $('#security-tab').on('shown.bs. tab', function() {
+                loadSecurityEvents();
+            });
+
+            console.log('✅ Security page loaded');
+        });
+
+        // Load all logs
+        function loadAllLogs() {
+            if (isLoading) return;
+            isLoading = true;
+
+            $.ajax({
+                url: '@Url.Action("GetAuditLogs", "Admin")',
+                type: 'GET',
+                data: { page: currentPage, pageSize: 50 },
+                success: function(response) {
+                    if (response.success) {
+                        displayLogs(response.data);
+                        $('#logCount').text(`Hiển thị ${response.data. length} logs`);
+                    } else {
+                        $('#logsTableBody').html('<tr><td colspan="7" class="text-center text-danger">Không thể tải logs</td></tr>');
+                    }
+                    isLoading = false;
+                },
+                error: function() {
+                    $('#logsTableBody').html('<tr><td colspan="7" class="text-center text-danger">Lỗi khi tải logs</td></tr>');
+                    isLoading = false;
+                }
+            });
+        }
+
+        // Display logs
+        function displayLogs(logs) {
+            if (logs.length === 0) {
+                $('#logsTableBody').html('<tr><td colspan="7" class="text-center text-muted py-4">Không có logs nào</td></tr>');
+                return;
+            }
+
+            let html = '';
+            logs.forEach(function(log) {
+                let actionBadge = getActionBadge(log.hanhdong);
+                let userInfo = log.hoten ? `${log.hoten} (${log.email})` : 'System';
+
+                html += `
+                    <tr data-action="${log.hanhdong}" data-table="${log.bangtacdong}">
+                        <td><small>${log.malog}</small></td>
+                        <td><small>${log.matk || 'N/A'}</small></td>
+                        <td><small>${userInfo}</small></td>
+                        <td>${actionBadge} ${log.hanhdong}</td>
+                        <td><span class="badge bg-secondary">${log.bangtacdong}</span></td>
+                        <td><small>${formatDate(log.ngaygio)}</small></td>
+                        <td><small>${log.ip || 'N/A'}</small></td>
+                    </tr>
+                `;
+            });
+
+            if (currentPage === 1) {
+                $('#logsTableBody').html(html);
+            } else {
+                $('#logsTableBody').append(html);
+            }
+        }
+
+        // Get action badge
+        function getActionBadge(action) {
+            let color = 'secondary';
+            let icon = 'fa-circle';
+
+            if (action === 'LOGIN') {
+                color = 'success'; icon = 'fa-sign-in-alt';
+            } else if (action === 'LOGOUT') {
+                color = 'info'; icon = 'fa-sign-out-alt';
+            } else if (action === 'REGISTER') {
+                color = 'primary'; icon = 'fa-user-plus';
+            } else if (action. includes('INSERT') || action.includes('CREATE')) {
+                color = 'success'; icon = 'fa-plus';
+            } else if (action.includes('UPDATE')) {
+                color = 'warning'; icon = 'fa-edit';
+            } else if (action.includes('DELETE')) {
+                color = 'danger'; icon = 'fa-trash';
+            } else if (action.includes('ACCESS_DENIED')) {
+                color = 'danger'; icon = 'fa-ban';
+            }
+
+            return `<i class="fas ${icon} text-${color} me-1"></i>`;
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            let date = new Date(dateStr);
+            return date.toLocaleString('vi-VN');
+        }
+
+        // Filter logs
+        function filterLogs() {
+            let searchText = $('#searchLogs').val(). toLowerCase();
+            let filterType = $('#filterLogType').val();
+
+            $('#allLogsTable tbody tr').each(function() {
+                let row = $(this);
+                let text = row.text().toLowerCase();
+                let action = row.data('action');
+
+                let matchSearch = searchText === '' || text.indexOf(searchText) > -1;
+                let matchType = filterType === '' || action === filterType || action.includes(filterType);
+
+                if (matchSearch && matchType) {
+                    row.show();
+                } else {
+                    row.hide();
+                }
+            });
+        }
+
+        // Load more logs
+        function loadMoreLogs() {
+            currentPage++;
+            loadAllLogs();
+        }
+
+        // Load statistics
+        function loadStatistics() {
+            $.ajax({
+                url: '@Url.Action("GetSecurityStatistics", "Admin")',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        $('#activeUsersCount').text(response.data.activeUsers);
+                        $('#adminActionsCount').text(response.data.adminActions);
+                    }
+                }
+            });
+        }
+
+        // Load login logs
+        function loadLoginLogs() {
+            $('#loginLogsContent').html('<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>');
+
+            $.ajax({
+                url: '@Url.Action("GetLoginLogs", "Admin")',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        let html = '<div class="table-responsive"><table class="table table-hover">';
+                        html += '<thead><tr><th>User</th><th>Action</th><th>Time</th><th>IP</th></tr></thead><tbody>';
+
+                        response.data.forEach(function(log) {
+                            let badge = log.hanhdong === 'LOGIN' ?
+                                '<span class="badge bg-success">Login</span>' :
+                                '<span class="badge bg-info">Logout</span>';
+
+                            html += `<tr>
+                                <td>${log. hoten || 'N/A'}<br><small class="text-muted">${log.email || ''}</small></td>
+                                <td>${badge}</td>
+                                <td>${formatDate(log.ngaygio)}</td>
+                                <td>${log.ip || 'N/A'}</td>
+                            </tr>`;
+                        });
+
+                        html += '</tbody></table></div>';
+                        $('#loginLogsContent').html(html);
+                    }
+                }
+            });
+        }
+
+        // Load admin logs
+        function loadAdminLogs() {
+            $('#adminLogsContent').html('<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>');
+
+            $.ajax({
+                url: '@Url.Action("GetAdminLogs", "Admin")',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        let html = '<div class="table-responsive"><table class="table table-hover">';
+                        html += '<thead><tr><th>Admin</th><th>Action</th><th>Time</th></tr></thead><tbody>';
+
+                        response.data. forEach(function(log) {
+                            html += `<tr>
+                                <td>${log.hoten || 'Admin'}<br><small class="text-muted">${log.email || ''}</small></td>
+                                <td><span class="badge bg-warning">${log.hanhdong}</span></td>
+                                <td>${formatDate(log.ngaygio)}</td>
+                            </tr>`;
+                        });
+
+                        html += '</tbody></table></div>';
+                        $('#adminLogsContent').html(html);
+                    }
+                }
+            });
+        }
+
+        // Load security events
+        function loadSecurityEvents() {
+            $('#securityEventsContent').html('<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>');
+
+            $.ajax({
+                url: '@Url.Action("GetSecurityEvents", "Admin")',
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        let html = '';
+
+                        if (response.data.length === 0) {
+                            html = '<div class="alert alert-success"><i class="fas fa-check-circle me-2"></i>Không có sự kiện bảo mật nào đáng ngờ! </div>';
+                        } else {
+                            html = '<div class="list-group">';
+                            response.data.forEach(function(event) {
+                                html += `
+                                    <div class="list-group-item list-group-item-danger">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1"><i class="fas fa-exclamation-triangle me-2"></i>${event.hanhdong}</h6>
+                                            <small>${formatDate(event.ngaygio)}</small>
+                                        </div>
+                                        <p class="mb-1">User: ${event.hoten || 'Unknown'} (${event.email || 'N/A'})</p>
+                                        <small>IP: ${event.ip || 'N/A'}</small>
+                                    </div>
+                                `;
+                            });
+                            html += '</div>';
+                        }
+
+                        $('#securityEventsContent').html(html);
+                    }
+                }
+            });
+        }
+
+        // Export logs
+        function exportLogs() {
+            window.location.href = '@Url.Action("ExportAuditLogs", "Admin")';
+        }
+    </script>
+}

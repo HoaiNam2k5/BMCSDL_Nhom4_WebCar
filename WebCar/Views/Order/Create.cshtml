@@ -1,0 +1,253 @@
+﻿@model WebCar.Models.ViewModels.CreateOrderViewModel
+
+@{
+    ViewBag.Title = "Đặt Hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Index", "Home")">
+                            <i class="fas fa-home"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Index", "Product")">Sản phẩm</a>
+                    </li>
+                    <li class="breadcrumb-item active">Đặt hàng</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-shopping-cart me-2"></i>
+                        Đặt Hàng
+                    </h3>
+                </div>
+
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("Create", "Order", FormMethod.Post,
+                        new { @class = "needs-validation", id = "orderForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.MaXe)
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="row">
+                            <!-- Thông tin xe -->
+                            <div class="col-md-6 mb-4">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-car me-2"></i>Thông Tin Xe
+                                </h5>
+
+                                <div class="car-info-box p-3 border rounded">
+                                    @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                                    {
+                                        <img src="@Url.Content("~/" + Model.HinhAnh)"
+                                             alt="@Model.TenXe"
+                                             class="img-fluid rounded mb-3"
+                                             style="max-height: 250px; width: 100%; object-fit: cover;" />
+                                    }
+
+                                    <h5 class="fw-bold">@Model.TenXe</h5>
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-building me-2"></i>
+                                        Hãng: <strong>@Model.HangXe</strong>
+                                    </p>
+                                    <h4 class="text-danger mb-0">
+                                        <i class="fas fa-tag me-2"></i>
+                                        @Model.Gia.ToString("N0") VNĐ
+                                    </h4>
+                                </div>
+                            </div>
+
+                            <!-- Form đặt hàng -->
+                            <div class="col-md-6 mb-4">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-edit me-2"></i>Chi Tiết Đơn Hàng
+                                </h5>
+
+                                <!-- Số lượng -->
+                                <div class="mb-4">
+                                    @Html.LabelFor(m => m.SoLuong, new { @class = "form-label fw-bold" })
+                                    <div class="input-group input-group-lg">
+                                        <button type="button" class="btn btn-outline-secondary" id="btnDecrease">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        @Html.TextBoxFor(m => m.SoLuong, new
+                                        {
+                                            @class = "form-control text-center",
+                                            type = "number",
+                                            min = "1",
+                                            max = "10",
+                                            id = "soLuong"
+                                        })
+                                        <button type="button" class="btn btn-outline-secondary" id="btnIncrease">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.SoLuong, "", new { @class = "text-danger small" })
+                                </div>
+
+                                <!-- Tổng tiền -->
+                                <div class="total-box p-4 bg-light rounded mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted">Đơn giá:</span>
+                                        <strong id="donGia">@Model.Gia.ToString("N0") VNĐ</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="text-muted">Số lượng:</span>
+                                        <strong id="displaySoLuong">@Model.SoLuong</strong>
+                                    </div>
+                                    <hr />
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Tổng tiền:</h5>
+                                        <h4 class="text-danger mb-0" id="tongTien">
+                                            @((Model.Gia * Model.SoLuong).ToString("N0")) VNĐ
+                                        </h4>
+                                    </div>
+                                </div>
+
+                                <!-- Thông tin khách hàng -->
+                                <div class="customer-info p-3 border rounded mb-4">
+                                    <h6 class="text-primary mb-3">
+                                        <i class="fas fa-user me-2"></i>Thông Tin Giao Hàng
+                                    </h6>
+                                    <p class="mb-1">
+                                        <strong>Họ tên:</strong> @Session["CustomerName"]
+                                    </p>
+                                    <p class="mb-1">
+                                        <strong>Email:</strong> @Session["CustomerEmail"]
+                                    </p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Thông tin chi tiết sẽ được lấy từ hồ sơ của bạn
+                                    </small>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Xác Nhận Đặt Hàng
+                                    </button>
+                                    <a href="@Url.Action("Index", "Product")"
+                                       class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left me-2"></i>
+                                        Quay Lại
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lưu ý -->
+                        <div class="alert alert-info mt-4">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-info-circle me-2"></i>Lưu Ý:
+                            </h6>
+                            <ul class="mb-0">
+                                <li>Đơn hàng sẽ được xử lý trong vòng 24 giờ</li>
+                                <li>Chúng tôi sẽ liên hệ với bạn qua email hoặc số điện thoại</li>
+                                <li>Vui lòng kiểm tra kỹ thông tin trước khi xác nhận</li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .car-info-box {
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+            .car-info-box:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+        .total-box {
+            border: 2px solid #0066cc;
+        }
+
+        .customer-info {
+            background: #f8f9fa;
+        }
+
+        #soLuong {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .input-group button {
+            width: 50px;
+        }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function() {
+            const donGia = @Model.Gia;
+
+            function updateTotal() {
+                const soLuong = parseInt($('#soLuong').val()) || 1;
+                const tongTien = donGia * soLuong;
+
+                $('#displaySoLuong').text(soLuong);
+                $('#tongTien').text(tongTien.toLocaleString('vi-VN') + ' VNĐ');
+            }
+
+            // Tăng số lượng
+            $('#btnIncrease').click(function() {
+                let current = parseInt($('#soLuong').val()) || 1;
+                if (current < 10) {
+                    $('#soLuong').val(current + 1);
+                    updateTotal();
+                }
+            });
+
+            // Giảm số lượng
+            $('#btnDecrease').click(function() {
+                let current = parseInt($('#soLuong').val()) || 1;
+                if (current > 1) {
+                    $('#soLuong').val(current - 1);
+                    updateTotal();
+                }
+            });
+
+            // Update khi thay đổi trực tiếp
+            $('#soLuong').on('input', function() {
+                let val = parseInt($(this).val()) || 1;
+                if (val < 1) val = 1;
+                if (val > 10) val = 10;
+                $(this).val(val);
+                updateTotal();
+            });
+
+            // Form validation
+            $('#orderForm').on('submit', function(e) {
+                const soLuong = parseInt($('#soLuong').val());
+                if (soLuong < 1 || soLuong > 10) {
+                    e.preventDefault();
+                    alert('Số lượng phải từ 1 đến 10');
+                    return false;
+                }
+            });
+
+            console.log('✅ Order Create page loaded');
+        });
+    </script>
+}

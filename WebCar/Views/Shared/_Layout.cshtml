@@ -87,7 +87,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" href="@Url.Action("Index", "Admin")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", "Admin" )">
                                             <i class="fas fa-tachometer-alt"></i> Dashboard
                                         </a>
                                     </li>
@@ -97,22 +97,27 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="@Url.Action("Create", "Product")">
-                                            <i class="fas fa-plus-circle"></i> Thêm xe mới
+                                        <a class="dropdown-item" href="@Url.Action("Products", "Admin")">
+                                            <i class="fas fa-car"></i> Sản phẩm
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="@Url.Action("Orders", "Admin")">
+                                            <i class="fas fa-shopping-cart"></i> Đơn hàng
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider" /></li>
                                     <li>
-                                        <a class="dropdown-item" href="@Url.Action("Index", "Audit")">
-                                            <i class="fas fa-history"></i> Audit Logs
+                                        <a class="dropdown-item" href="@Url.Action("Security", "Admin" )">
+                                            <i class="fas fa-shield-alt"></i> Bảo mật
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                        }
+                            }
 
-                        if (userRole == "ADMIN" || userRole == "MANAGER")
-                        {
+                            if (userRole == "ADMIN" || userRole == "MANAGER")
+                            {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                                     <i class="fas fa-chart-line me-1"></i>
@@ -120,28 +125,28 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" href="@Url.Action("Dashboard", "Audit")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", "Admin")">
                                             <i class="fas fa-chart-bar"></i> Dashboard
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="@Url.Action("SecurityEvents", "Audit")">
+                                        <a class="dropdown-item" href="@Url.Action("Security", "Admin")">
                                             <i class="fas fa-exclamation-triangle"></i> Sự kiện bảo mật
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                        }
+                            }
 
-                        <!-- Menu cho TẤT CẢ user đã đăng nhập -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("MyOrders", "Order")">
-                                <i class="fas fa-shopping-bag me-1"></i>
-                                <span>Đơn hàng</span>
-                            </a>
-                        </li>
-                    }
-                </ul>
+                            <!-- Menu cho TẤT CẢ user đã đăng nhập -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("MyOrders", "Order")">
+                                    <i class="fas fa-shopping-bag me-1"></i>
+                                    <span>Đơn hàng</span>
+                                </a>
+                            </li>
+                            }
+                        </ul>
 
                 <!-- ✅ RIGHT MENU - Login/User -->
                 <ul class="navbar-nav ms-auto align-items-lg-center">

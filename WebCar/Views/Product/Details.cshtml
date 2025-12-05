@@ -158,22 +158,26 @@
                 <div class="product-actions">
                     @if (Model.CanOrder)
                     {
-                        <button class="btn btn-primary btn-lg btn-buy">
+                        <!-- ✅ SỬA: Đổi từ button sang link đến Order/Create -->
+                        <a href="@Url.Action("Create", "Order", new { maXe = Model.Car.MAXE })"
+                           class="btn btn-primary btn-lg btn-buy">
                             <i class="fas fa-shopping-cart me-2"></i> Đặt Mua Ngay
-                        </button>
-                        <button class="btn btn-outline-primary btn-lg btn-contact">
+                        </a>
+
+                        <button class="btn btn-outline-primary btn-lg btn-contact" onclick="showContactInfo()">
                             <i class="fas fa-phone me-2"></i> Liên Hệ Tư Vấn
                         </button>
                     }
                     else if (!Model.IsAuthenticated)
                     {
-                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-lg">
+                        <a href="@Url.Action("Login", "Account", new { returnUrl = Url.Action("Details", "Product", new { id = Model.Car.MAXE }) })"
+                           class="btn btn-primary btn-lg w-100">
                             <i class="fas fa-sign-in-alt me-2"></i> Đăng Nhập Để Đặt Mua
                         </a>
                     }
                     else
                     {
-                        <button class="btn btn-secondary btn-lg" disabled>
+                        <button class="btn btn-secondary btn-lg w-100" disabled>
                             <i class="fas fa-times-circle me-2"></i> Hết Hàng
                         </button>
                     }
@@ -922,10 +926,53 @@
             var isActive = $('.btn-wishlist').hasClass('active');
 
             if (isActive) {
-                alert('Đã thêm vào danh sách yêu thích!');
+                // TODO: Call API to add to wishlist
+                $.notify({
+                    icon: 'fas fa-heart',
+                    message: 'Đã thêm vào danh sách yêu thích!'
+                }, {
+                    type: 'success',
+                    placement: { from: 'top', align: 'right' }
+                });
             } else {
-                alert('Đã xóa khỏi danh sách yêu thích!');
+                $.notify({
+                    icon: 'fas fa-heart-broken',
+                    message: 'Đã xóa khỏi danh sách yêu thích!'
+                }, {
+                    type: 'info',
+                    placement: { from: 'top', align: 'right' }
+                });
             }
+        }
+
+        // Contact button
+        function showContactInfo() {
+            Swal.fire({
+                title: '<i class="fas fa-phone-alt text-primary"></i> Liên Hệ Tư Vấn',
+                html: `
+                    <div class="text-start">
+                        <p class="mb-3"><strong>Hotline:</strong> <a href="tel:1900232389" class="text-primary">1900 23 23 89</a></p>
+                        <p class="mb-3"><strong>Email:</strong> <a href="mailto:support.vn@vinfastauto.com">support.vn@vinfastauto.com</a></p>
+                        <p class="mb-3"><strong>Giờ làm việc:</strong> 8:00 - 18:00 (Thứ 2 - Chủ Nhật)</p>
+                        <hr />
+                        <p class="mb-2"><i class="fas fa-map-marker-alt text-danger me-2"></i><strong>Showroom:</strong></p>
+                        <p class="ms-4 text-muted">Số 7, Phường Tân Thuận Đông, Quận 7, TP. HCM</p>
+                    </div>
+                `,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-phone me-2"></i>Gọi Ngay',
+                cancelButtonText: 'Đóng',
+                confirmButtonColor: '#0066cc',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'tel:1900232389';
+                }
+            });
         }
 
         // Rating input
@@ -953,49 +1000,79 @@
         // Submit review
         function submitReview() {
             var rating = $('#ratingValue').val();
-            var content = $('#reviewContent').val();
+            var content = $('#reviewContent').val().trim();
 
             if (rating == 0) {
-                alert('Vui lòng chọn số sao đánh giá!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thiếu thông tin',
+                    text: 'Vui lòng chọn số sao đánh giá!'
+                });
                 return;
             }
 
-            if (content.trim() == '') {
-                alert('Vui lòng nhập nội dung đánh giá!');
+            if (content == '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thiếu thông tin',
+                    text: 'Vui lòng nhập nội dung đánh giá!'
+                });
                 return;
             }
 
+            // AJAX call to save feedback
             $.ajax({
                 url: '@Url.Action("AddFeedback", "Product")',
                 type: 'POST',
                 data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
                     carId: @Model.Car.MAXE,
                     content: content,
                     rating: rating
                 },
                 success: function(response) {
                     if (response.success) {
-                        alert('Cảm ơn bạn đã đánh giá!');
-                        $('#reviewModal').modal('hide');
-                        location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: 'Cảm ơn bạn đã đánh giá sản phẩm!',
+                            timer: 2000
+                        }).then(() => {
+                            $('#reviewModal').modal('hide');
+                            location.reload();
+                        });
                     } else {
-                        alert(response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: response.message || 'Có lỗi xảy ra!'
+                        });
                     }
                 },
-                error: function() {
-                    alert('Có lỗi xảy ra. Vui lòng thử lại!');
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Không thể gửi đánh giá. Vui lòng thử lại sau!'
+                    });
+                    console.error('Error:', xhr);
                 }
             });
         }
 
-        // Buy button
-        $('.btn-buy').on('click', function() {
-            alert('Chức năng đặt mua đang được phát triển!');
-        });
+        $(document).ready(function() {
+            console.log('✅ Product Details page loaded');
 
-        // Contact button
-        $('.btn-contact').on('click', function() {
-            alert('Hotline tư vấn: 1900 23 23 89');
+            // Check if user just added to wishlist
+            @if (TempData["WishlistMessage"] != null)
+            {
+                @:$.notify({
+                @:    icon: 'fas fa-check',
+                @:    message: '@TempData["WishlistMessage"]'
+                @:}, {
+                @:    type: 'success'
+                @:});
+            }
         });
     </script>
 }

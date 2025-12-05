@@ -12,19 +12,20 @@ namespace WebCar.Data
 
         public CarRepository()
         {
-            var connectionStringSettings = ConfigurationManager.ConnectionStrings["OracleDb"];
+            // ✅ SỬA: Dùng "Model1" để thống nhất với các repo khác
+            var connectionStringSettings = ConfigurationManager.ConnectionStrings["Model1"];
 
             if (connectionStringSettings == null)
             {
                 throw new InvalidOperationException(
-                    "Connection string 'OracleDb' not found in Web.config."
+                    "Connection string 'Model1' not found in Web.config."
                 );
             }
 
             _connectionString = connectionStringSettings.ConnectionString;
         }
 
-        // ✅ FIX: GetAllCars với tìm kiếm CHÍNH XÁC
+        // ====================== LẤY TẤT CẢ XE VỚI FILTER ======================
         public List<CAR> GetAllCars(string searchTerm = null, string brand = null,
             decimal? minPrice = null, decimal? maxPrice = null, short? year = null)
         {
@@ -37,7 +38,6 @@ namespace WebCar.Data
                     FROM CAR
                     WHERE TRANGTHAI != 'Da xoa'";
 
-                // ✅ Tìm kiếm: loại bỏ khoảng trắng + không phân biệt hoa thường
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
                     sql += @" AND (
@@ -71,7 +71,6 @@ namespace WebCar.Data
 
                 var cmd = new OracleCommand(sql, conn);
 
-                // Bind parameters
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
                     cmd.Parameters.Add(new OracleParameter("searchTerm", OracleDbType.Varchar2)
@@ -114,14 +113,8 @@ namespace WebCar.Data
 
                 conn.Open();
 
-                // ✅ DEBUG LOG
                 System.Diagnostics.Debug.WriteLine("=== SQL QUERY ===");
                 System.Diagnostics.Debug.WriteLine(sql);
-                System.Diagnostics.Debug.WriteLine("=== PARAMETERS ===");
-                foreach (OracleParameter param in cmd.Parameters)
-                {
-                    System.Diagnostics.Debug.WriteLine($"{param.ParameterName} = {param.Value}");
-                }
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -147,6 +140,13 @@ namespace WebCar.Data
             return cars;
         }
 
+        // ✅ THÊM: GetCarById với tham số int (cho OrderController)
+        public CAR GetCarById(int carId)
+        {
+            return GetCarById((decimal)carId);
+        }
+
+        // ====================== LẤY XE THEO ID (DECIMAL) ======================
         public CAR GetCarById(decimal carId)
         {
             using (var conn = new OracleConnection(_connectionString))
@@ -181,6 +181,7 @@ namespace WebCar.Data
             return null;
         }
 
+        // ====================== LẤY DANH SÁCH HÃNG XE ======================
         public List<string> GetBrands()
         {
             var brands = new List<string>();
@@ -212,6 +213,7 @@ namespace WebCar.Data
             return brands;
         }
 
+        // ====================== LẤY XE LIÊN QUAN ======================
         public List<CAR> GetRelatedCars(decimal carId, string brand, int limit = 4)
         {
             var cars = new List<CAR>();
@@ -254,7 +256,7 @@ namespace WebCar.Data
             return cars;
         }
 
-        // Các methods khác giữ nguyên...
+        // ====================== TẠO XE MỚI ======================
         public (bool Success, string Message, decimal CarId) CreateCar(CAR car)
         {
             try
@@ -286,10 +288,12 @@ namespace WebCar.Data
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"CreateCar Error: {ex.Message}");
                 return (false, "Lỗi: " + ex.Message, 0);
             }
         }
 
+        // ====================== CẬP NHẬT XE ======================
         public (bool Success, string Message) UpdateCar(CAR car)
         {
             try
@@ -327,10 +331,12 @@ namespace WebCar.Data
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"UpdateCar Error: {ex.Message}");
                 return (false, "Lỗi: " + ex.Message);
             }
         }
 
+        // ====================== XÓA XE (SOFT DELETE) ======================
         public (bool Success, string Message) DeleteCar(decimal carId)
         {
             try
@@ -355,6 +361,7 @@ namespace WebCar.Data
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"DeleteCar Error: {ex.Message}");
                 return (false, "Lỗi: " + ex.Message);
             }
         }

@@ -1,0 +1,356 @@
+﻿@model List<WebCar.Models.ViewModels.AdminOrderViewModel>
+
+@{
+    ViewBag.Title = "Quản Lý Đơn Hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid mt-5 pt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-shopping-cart me-2 text-primary"></i>
+                    Quản Lý Đơn Hàng
+                </h2>
+                <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay Lại
+                </a>
+            </div>
+
+            <!-- Messages -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Statistics -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-info">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">TỔNG ĐƠN</h6>
+                                    <h3 class="mb-0">@(Model?.Count ??  0)</h3>
+                                </div>
+                                <i class="fas fa-shopping-cart fa-2x text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">CHỜ XỬ LÝ</h6>
+                                    <h3 class="mb-0">@(Model?.Count(o => o.TrangThai == "Cho xu ly") ?? 0)</h3>
+                                </div>
+                                <i class="fas fa-clock fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">HOÀN THÀNH</h6>
+                                    <h3 class="mb-0">@(Model?.Count(o => o.TrangThai == "Hoan thanh") ?? 0)</h3>
+                                </div>
+                                <i class="fas fa-check-circle fa-2x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card stat-card-small border-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">DOANH THU</h6>
+                                    <h3 class="mb-0">@(Model?.Where(o => o.TrangThai != "Da huy").Sum(o => o.TongTien). ToString("N0") ?? "0")</h3>
+                                    <small>VNĐ</small>
+                                </div>
+                                <i class="fas fa-dollar-sign fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" id="searchInput" class="form-control"
+                                   placeholder="Tìm theo mã đơn, tên khách...  ">
+                        </div>
+                        <div class="col-md-3">
+                            <select id="filterStatus" class="form-select">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="Cho xu ly">Chờ xử lý</option>
+                                <option value="Dang xu ly">Đang xử lý</option>
+                                <option value="Hoan thanh">Hoàn thành</option>
+                                <option value="Da huy">Đã hủy</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" id="filterDate" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" onclick="applyFilters()">
+                                <i class="fas fa-filter me-2"></i>Lọc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            @if (Model != null && Model.Any())
+            {
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="ordersTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Mã Đơn</th>
+                                        <th>Khách Hàng</th>
+                                        <th>Sản Phẩm</th>
+                                        <th>Số Lượng</th>
+                                        <th>Tổng Tiền</th>
+                                        <th>Ngày Đặt</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model)
+                                    {
+                                        <tr class="order-row"
+                                            data-status="@order.TrangThai"
+                                            data-date="@order.NgayDat.ToString("yyyy-MM-dd")"
+                                            data-search="@order.MaDon @order.HoTen @order.TenXe">
+                                            <td>
+                                                <strong class="text-primary">#@order.MaDon</strong>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>@order.HoTen</strong><br />
+                                                    <small class="text-muted">@order.Email</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <strong>@order.TenXe</strong><br />
+                                                    <small class="text-muted">@order.HangXe</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">@order.SoLuong</span>
+                                            </td>
+                                            <td>
+                                                <strong class="text-danger">@order.TongTien.ToString("N0") VNĐ</strong>
+                                            </td>
+                                            <td>
+                                                <small>@order.NgayDat. ToString("dd/MM/yyyy HH:mm")</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge @(order.TrangThai == "Cho xu ly" ? "bg-warning" :
+                                                                      order.TrangThai == "Dang xu ly" ? "bg-info" :
+                                                                      order.TrangThai == "Hoan thanh" ? "bg-success" : "bg-danger")">
+                                                    @(order.TrangThai == "Cho xu ly" ? "Chờ xử lý" :
+                                                      order.TrangThai == "Dang xu ly" ? "Đang xử lý" :
+                                                      order.TrangThai == "Hoan thanh" ? "Hoàn thành" : "Đã hủy")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <button class="btn btn-outline-info"
+                                                            onclick="viewOrder(@order.MaDon)"
+                                                            title="Xem chi tiết">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    @if (order.TrangThai != "Hoan thanh" && order.TrangThai != "Da huy")
+                                                    {
+                                                        <button class="btn btn-outline-primary"
+                                                                onclick="updateOrderStatus(@order.MaDon, '@order.TrangThai')"
+                                                                title="Cập nhật trạng thái">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">Chưa có đơn hàng nào</h5>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Update Status -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2"></i>Cập Nhật Trạng Thái
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="updateOrderId" />
+                <div class="mb-3">
+                    <label class="form-label">Trạng thái hiện tại:</label>
+                    <p id="currentStatus" class="fw-bold"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Chọn trạng thái mới:</label>
+                    <select class="form-select" id="newStatus">
+                        <option value="Cho xu ly">Chờ xử lý</option>
+                        <option value="Dang xu ly">Đang xử lý</option>
+                        <option value="Hoan thanh">Hoàn thành</option>
+                        <option value="Da huy">Đã hủy</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="confirmUpdateStatus()">
+                    <i class="fas fa-check me-2"></i>Xác Nhận
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .stat-card-small {
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card-small:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+
+        .order-row {
+            transition: all 0.2s ease;
+        }
+
+            .order-row:hover {
+                background-color: #f8f9fa;
+            }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Search
+        $('#searchInput').on('keyup', function() {
+            applyFilters();
+        });
+
+        // Apply filters
+        function applyFilters() {
+            var searchText = $('#searchInput').val().toLowerCase();
+            var filterStatus = $('#filterStatus').val();
+            var filterDate = $('#filterDate').val();
+
+            $('. order-row').each(function() {
+                var searchData = $(this).data('search'). toLowerCase();
+                var orderStatus = $(this).data('status');
+                var orderDate = $(this).data('date');
+
+                var matchSearch = searchText === '' || searchData.indexOf(searchText) > -1;
+                var matchStatus = filterStatus === '' || orderStatus === filterStatus;
+                var matchDate = filterDate === '' || orderDate === filterDate;
+
+                if (matchSearch && matchStatus && matchDate) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        // View order
+        function viewOrder(orderId) {
+            window.open('@Url.Action("Details", "Order")/' + orderId, '_blank');
+        }
+
+        // Update order status
+        function updateOrderStatus(orderId, currentStatus) {
+            $('#updateOrderId').val(orderId);
+
+            var statusText = currentStatus === 'Cho xu ly' ? 'Chờ xử lý' :
+                           currentStatus === 'Dang xu ly' ? 'Đang xử lý' :
+                           currentStatus === 'Hoan thanh' ? 'Hoàn thành' : 'Đã hủy';
+
+            $('#currentStatus').text(statusText);
+            $('#newStatus').val(currentStatus);
+            $('#updateStatusModal').modal('show');
+        }
+
+        function confirmUpdateStatus() {
+            var orderId = $('#updateOrderId'). val();
+            var newStatus = $('#newStatus').val();
+
+            $. ajax({
+                url: '@Url.Action("UpdateOrderStatus", "Admin")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: $('@Html.AntiForgeryToken()').val(),
+                    orderId: orderId,
+                    newStatus: newStatus
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra! ');
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+
+            console.log('✅ Orders Management loaded');
+        });
+    </script>
+}
