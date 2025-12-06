@@ -78,7 +78,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="text-muted mb-1">DOANH THU</h6>
-                                    <h3 class="mb-0">@(Model?.Where(o => o.TrangThai != "Da huy").Sum(o => o.TongTien). ToString("N0") ?? "0")</h3>
+                                    <h3 class="mb-0">@(Model?.Where(o => o.TrangThai != "Da huy").Sum(o => o.TongTien).ToString("N0") ?? "0")</h3>
                                     <small>VNĐ</small>
                                 </div>
                                 <i class="fas fa-dollar-sign fa-2x text-primary"></i>
@@ -165,7 +165,7 @@
                                                 <strong class="text-danger">@order.TongTien.ToString("N0") VNĐ</strong>
                                             </td>
                                             <td>
-                                                <small>@order.NgayDat. ToString("dd/MM/yyyy HH:mm")</small>
+                                                <small>@order.NgayDat.ToString("dd/MM/yyyy HH:mm")</small>
                                             </td>
                                             <td>
                                                 <span class="badge @(order.TrangThai == "Cho xu ly" ? "bg-warning" :
