@@ -1,0 +1,681 @@
+﻿@model List<WebCar.Controllers.BackupInfo>
+
+@{
+    ViewBag.Title = "Backup & Restore Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid mt-5 pt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-database me-2 text-primary"></i>
+                    Backup & Restore Management
+                </h2>
+                <div>
+                    <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Admin
+                    </a>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <!-- Statistics Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-primary h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">TOTAL BACKUPS</h6>
+                                    <h3 class="mb-0 text-primary">@ViewBag.TotalBackups</h3>
+                                </div>
+                                <i class="fas fa-database fa-3x text-primary opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-success h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">COMPLETED</h6>
+                                    <h3 class="mb-0 text-success">@ViewBag.CompletedBackups</h3>
+                                </div>
+                                <i class="fas fa-check-circle fa-3x text-success opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-warning h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">TODAY</h6>
+                                    <h3 class="mb-0 text-warning">@ViewBag.TodayBackups</h3>
+                                </div>
+                                <i class="fas fa-calendar-day fa-3x text-warning opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+                    <div class="card stat-card border-danger h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-muted mb-1">FAILED</h6>
+                                    <h3 class="mb-0 text-danger">@ViewBag.FailedBackups</h3>
+                                </div>
+                                <i class="fas fa-times-circle fa-3x text-danger opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <button class="btn btn-success w-100 btn-action" onclick="showCreateBackupModal()">
+                                <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                                <div>Create Backup</div>
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-warning w-100 btn-action" onclick="showCleanupModal()">
+                                <i class="fas fa-broom fa-2x mb-2"></i>
+                                <div>Cleanup Old</div>
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-info w-100 btn-action" onclick="refreshPage()">
+                                <i class="fas fa-sync fa-2x mb-2"></i>
+                                <div>Refresh</div>
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-secondary w-100 btn-action" onclick="showScheduleInfo()">
+                                <i class="fas fa-clock fa-2x mb-2"></i>
+                                <div>Schedule Info</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backup List -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list me-2"></i>Backup History
+                            </h5>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="searchBackup" class="form-control"
+                                   placeholder="🔍 Search backups...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0" id="backupTable">
+                                <thead class="table-light sticky-top">
+                                    <tr>
+                                        <th width="80">ID</th>
+                                        <th>Backup Name</th>
+                                        <th>Status</th>
+                                        <th>Created By</th>
+                                        <th>Created Date</th>
+                                        <th>Tables</th>
+                                        <th>Records</th>
+                                        <th>Age</th>
+                                        <th width="250">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var backup in Model)
+                                    {
+                                        <tr data-backup-id="@backup.BackupId">
+                                            <td><strong class="text-primary">#@backup.BackupId</strong></td>
+                                            <td>
+                                                <i class="fas fa-database text-info me-2"></i>
+                                                <strong>@backup.BackupName</strong>
+                                                @if (!string.IsNullOrEmpty(backup.Notes))
+                                                {
+                                                    <br><small class="text-muted">@backup.Notes</small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge @backup.StatusBadgeClass">
+                                                    <i class="fas @backup.StatusIcon me-1"></i>
+                                                    @backup.Status
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-user me-1"></i>
+                                                @backup.CreatedByName
+                                            </td>
+                                            <td>
+                                                <small>@backup.CreatedDate.ToString("dd/MM/yyyy")</small><br>
+                                                <small class="text-muted">@backup.CreatedDate.ToString("HH:mm:ss")</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">@backup.TotalTables</span>
+                                            </td>
+                                            <td>
+                                                <strong>@backup.TotalRecords.ToString("N0")</strong>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">@backup.AgeFormatted</small>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button class="btn btn-outline-info"
+                                                            onclick="viewBackupDetails(@backup.BackupId)"
+                                                            title="View Details">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </button>
+                                                    @if (backup.Status == "COMPLETED")
+                                                    {
+                                                        <button class="btn btn-outline-warning"
+                                                                onclick="restoreBackup(@backup.BackupId, '@backup.BackupName')"
+                                                                title="Restore">
+                                                            <i class="fas fa-undo"></i>
+                                                        </button>
+                                                    }
+                                                    <button class="btn btn-outline-danger"
+                                                            onclick="deleteBackup(@backup.BackupId, '@backup.BackupName')"
+                                                            title="Delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-database fa-5x text-muted mb-3"></i>
+                            <h5 class="text-muted">No backups found</h5>
+                            <p class="text-muted">Create your first backup to get started</p>
+                            <button class="btn btn-primary btn-lg mt-3" onclick="showCreateBackupModal()">
+                                <i class="fas fa-plus me-2"></i>Create First Backup
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                @if (Model != null && Model.Any())
+                {
+                    <div class="card-footer bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">
+                                    Showing <strong>@Model.Count</strong> backups
+                                </small>
+                            </div>
+                            <div>
+                                <small class="text-muted">
+                                    Total Records: <strong>@Model.Sum(b => b.TotalRecords).ToString("N0")</strong>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Create Backup -->
+<div class="modal fade" id="createBackupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2"></i>Create New Backup
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Backup Name</label>
+                    <input type="text" class="form-control form-control-lg" id="backupName"
+                           placeholder="e.g., WEEKLY_BACKUP" value="MANUAL_BACKUP">
+                    <small class="text-muted">Leave empty for auto-generated name</small>
+                </div>
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>What will be backed up:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>All tables (CUSTOMER, CAR, ORDERS, etc.)</li>
+                        <li>All data records</li>
+                        <li>Metadata and relationships</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <button type="button" class="btn btn-success" onclick="createBackup()">
+                    <i class="fas fa-save me-2"></i>Create Backup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Cleanup Old Backups -->
+<div class="modal fade" id="cleanupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">
+                    <i class="fas fa-broom me-2"></i>Cleanup Old Backups
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Delete backups older than:</label>
+                    <div class="input-group input-group-lg">
+                        <input type="number" class="form-control" id="cleanupDays" value="30" min="1" max="365">
+                        <span class="input-group-text">days</span>
+                    </div>
+                </div>
+                <div class="alert alert-warning mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone!
+                    All backup tables will be permanently deleted.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" onclick="cleanupOldBackups()">
+                    <i class="fas fa-trash me-2"></i>Cleanup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Backup Details -->
+<div class="modal fade" id="backupDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-info-circle me-2"></i>Backup Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="backupDetailsContent">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2">Loading details...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .stat-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+            }
+
+        .btn-action {
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .btn-action:hover {
+                transform: scale(1.05);
+            }
+
+        #backupTable tbody tr {
+            transition: all 0.2s ease;
+        }
+
+            #backupTable tbody tr:hover {
+                background-color: #f0f8ff !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Search functionality
+        $('#searchBackup').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('#backupTable tbody tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+
+        // Show create backup modal
+        function showCreateBackupModal() {
+            $('#backupName').val('MANUAL_BACKUP');
+            $('#createBackupModal').modal('show');
+        }
+
+        // Create backup
+        function createBackup() {
+            var backupName = $('#backupName').val().trim();
+
+            Swal.fire({
+                title: 'Creating Backup...',
+                html: `
+                    <div class="text-center">
+                        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;"></div>
+                        <p>Please wait while backup is being created...</p>
+                        <p class="text-muted">This may take a few moments</p>
+                    </div>
+                `,
+                allowOutsideClick: false,
+                showConfirmButton: false
+            });
+
+            $.ajax({
+                url: '@Url.Action("CreateBackup", "Backup")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                    backupName: backupName
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            html: `
+                                <p>${response.message}</p>
+                                <p class="text-muted">Backup ID: #${response.backupId}</p>
+                            `,
+                            timer: 3000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                        $('#createBackupModal').modal('hide');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to create backup: ' + (xhr.responseText || 'Unknown error')
+                    });
+                }
+            });
+        }
+
+        // Restore backup
+        function restoreBackup(backupId, backupName) {
+            Swal.fire({
+                title: 'Restore Database?',
+                html: `
+                    <p>Are you sure you want to restore from:</p>
+                    <p class="fw-bold text-primary">${backupName}</p>
+                    <div class="alert alert-danger mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This will overwrite all current data!
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: '<i class="fas fa-undo me-2"></i>Yes, Restore!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Restoring...',
+                        html: 'Please wait while database is being restored',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+
+                    $.ajax({
+                        url: '@Url.Action("RestoreBackup", "Backup")',
+                        type: 'POST',
+                        data: {
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                            backupId: backupId
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Restored!',
+                                    text: response.message
+                                }).then(() => location.reload());
+                            } else {
+                                Swal.fire('Failed', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error', 'Restore failed', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Delete backup
+        function deleteBackup(backupId, backupName) {
+            Swal.fire({
+                title: 'Delete Backup?',
+                html: `<p>Delete backup: <strong>${backupName}</strong>?</p>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteBackup", "Backup")',
+                        type: 'POST',
+                        data: {
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                            backupId: backupId
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Failed', response.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // View backup details
+        function viewBackupDetails(backupId) {
+            $('#backupDetailsModal').modal('show');
+
+            $.ajax({
+                url: '@Url.Action("GetBackupDetails", "Backup")',
+                type: 'GET',
+                data: { backupId: backupId },
+                success: function(response) {
+                    if (response.success) {
+                        let html = '<div class="table-responsive"><table class="table table-sm table-bordered">';
+                        html += '<thead class="table-light"><tr><th>Table Name</th><th>Record Count</th><th>Backup Table</th></tr></thead><tbody>';
+
+                        response.data.forEach(function(item) {
+                            html += `<tr>
+                                <td><i class="fas fa-table text-primary me-2"></i>${item.tableName}</td>
+                                <td><strong>${item.recordCount.toLocaleString()}</strong></td>
+                                <td><code>${item.backupTableName}</code></td>
+                            </tr>`;
+                        });
+
+                        html += '</tbody></table></div>';
+                        $('#backupDetailsContent').html(html);
+                    } else {
+                        $('#backupDetailsContent').html('<div class="alert alert-danger">Failed to load details</div>');
+                    }
+                },
+                error: function() {
+                    $('#backupDetailsContent').html('<div class="alert alert-danger">Error loading details</div>');
+                }
+            });
+        }
+
+        // Show cleanup modal
+        function showCleanupModal() {
+            $('#cleanupModal').modal('show');
+        }
+
+        // Cleanup old backups
+        function cleanupOldBackups() {
+            var days = $('#cleanupDays').val();
+
+            $.ajax({
+                url: '@Url.Action("CleanupOldBackups", "Backup")',
+                type: 'POST',
+                data: {
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                    days: days
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#cleanupModal').modal('hide');
+                        Swal.fire('Success', response.message, 'success')
+                            .then(() => location.reload());
+                    } else {
+                        Swal.fire('Failed', response.message, 'error');
+                    }
+                }
+            });
+        }
+
+        // Refresh page
+        function refreshPage() {
+            location.reload();
+        }
+
+        // Show schedule info
+        function showScheduleInfo() {
+            Swal.fire({
+                title: 'Backup Schedule',
+                html: `
+                    <div class="text-start">
+                        <h6><i class="fas fa-calendar-alt me-2"></i>Automatic Backup Schedule:</h6>
+                        <ul class="list-unstyled mt-3">
+                            <li class="mb-2">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <strong>Daily:</strong> 2:00 AM
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-database text-success me-2"></i>
+                                <strong>Type:</strong> Full Backup
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-history text-warning me-2"></i>
+                                <strong>Retention:</strong> 30 days
+                            </li>
+                            <li>
+                                <i class="fas fa-server text-info me-2"></i>
+                                <strong>Location:</strong> Oracle Database
+                            </li>
+                        </ul>
+                        <hr>
+                        <p class="small text-muted mb-0">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Backups are stored as database tables with prefix BKP_
+                        </p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        $(document).ready(function() {
+            console.log('✅ Backup Management loaded');
+
+            // Auto-dismiss alerts
+            setTimeout(function() {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
+}

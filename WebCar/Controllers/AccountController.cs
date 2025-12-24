@@ -25,12 +25,10 @@ namespace WebCar.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            // ✅ SỬA: Chỉ kiểm tra Session, KHÔNG dùng User.Identity
             if (Session["CustomerId"] != null)
             {
                 return RedirectToAction("Index", "Home");
             }
-
             return View();
         }
 
@@ -53,7 +51,7 @@ namespace WebCar.Controllers
 
                 if (result.Success)
                 {
-                    TempData["SuccessMessage"] = "Đăng ký thành công! Vui lòng đăng nhập.";
+                    TempData["SuccessMessage"] = "Đăng ký thành công!  Vui lòng đăng nhập.";
                     return RedirectToAction("Login");
                 }
 
@@ -68,7 +66,7 @@ namespace WebCar.Controllers
         }
 
         // =========================================
-        // GET: Account/Login
+        // GET:  Account/Login
         // =========================================
         [HttpGet]
         [AllowAnonymous]
@@ -76,9 +74,7 @@ namespace WebCar.Controllers
         {
             System.Diagnostics.Debug.WriteLine("========== GET Login ==========");
             System.Diagnostics.Debug.WriteLine($"Session CustomerId: {Session["CustomerId"]}");
-            System.Diagnostics.Debug.WriteLine($"User.Identity.IsAuthenticated: {User.Identity.IsAuthenticated}");
 
-            // ✅ SỬA: Chỉ kiểm tra Session
             if (Session["CustomerId"] != null)
             {
                 System.Diagnostics.Debug.WriteLine("User already logged in via Session");
@@ -91,7 +87,7 @@ namespace WebCar.Controllers
         }
 
         // =========================================
-        // POST: Account/Login
+        // POST:  Account/Login
         // =========================================
         [HttpPost]
         [AllowAnonymous]
@@ -115,6 +111,19 @@ namespace WebCar.Controllers
 
                 if (result.Success)
                 {
+                    // ✅ SET VPD SECURITY CONTEXT
+                    try
+                    {
+                        string roleName = result.Customer.RoleName ?? "CUSTOMER";
+                        _customerRepo.SetSecurityContext(result.Customer.MaKH, roleName);
+                        System.Diagnostics.Debug.WriteLine($"✅ VPD Context set:  User {result.Customer.MaKH}, Role {roleName}");
+                    }
+                    catch (Exception ctxEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"⚠️ Failed to set VPD context: {ctxEx.Message}");
+                        // Don't fail login if context fails
+                    }
+
                     // Tạo Forms Authentication Ticket
                     var ticket = new FormsAuthenticationTicket(
                         1,
@@ -140,7 +149,7 @@ namespace WebCar.Controllers
                     Session["CustomerId"] = result.Customer.MaKH;
                     Session["CustomerName"] = result.Customer.HoTen;
                     Session["CustomerEmail"] = result.Customer.Email;
-                    Session["RoleName"] = result.Customer.RoleName; // ✅ SỬA: RoleName thay vì CustomerRole
+                    Session["RoleName"] = result.Customer.RoleName;
 
                     System.Diagnostics.Debug.WriteLine("✅ Login successful, redirecting...");
 
@@ -159,6 +168,7 @@ namespace WebCar.Controllers
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"💥 Exception: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack: {ex.StackTrace}");
                 ModelState.AddModelError("", "Có lỗi xảy ra: " + ex.Message);
                 return View(model);
             }
@@ -173,6 +183,18 @@ namespace WebCar.Controllers
         {
             try
             {
+                // ✅ CLEAR VPD SECURITY CONTEXT
+                try
+                {
+                    _customerRepo.ClearSecurityContext();
+                    System.Diagnostics.Debug.WriteLine($"✅ VPD Context cleared");
+                }
+                catch (Exception ctxEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"⚠️ Failed to clear VPD context: {ctxEx.Message}");
+                }
+
+                // Log logout
                 if (Session["CustomerId"] != null)
                 {
                     int customerId = (int)Session["CustomerId"];
@@ -196,7 +218,8 @@ namespace WebCar.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Lỗi khi đăng xuất: " + ex.Message;
+                System.Diagnostics.Debug.WriteLine($"❌ Logout Error: {ex.Message}");
+                TempData["ErrorMessage"] = "Lỗi khi đăng xuất:  " + ex.Message;
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -266,7 +289,7 @@ namespace WebCar.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Lỗi khi cập nhật: " + ex.Message;
+                TempData["ErrorMessage"] = "Lỗi khi cập nhật:  " + ex.Message;
                 return RedirectToAction("MyProfile");
             }
         }
@@ -282,7 +305,7 @@ namespace WebCar.Controllers
         }
 
         // =========================================
-        // POST: Account/ChangePassword
+        // POST:  Account/ChangePassword
         // =========================================
         [HttpPost]
         [Authorize]
@@ -315,12 +338,11 @@ namespace WebCar.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Lỗi: " + ex.Message);
+                ModelState.AddModelError("", "Lỗi:  " + ex.Message);
                 return View(model);
             }
         }
 
-        // =========================================
         // =========================================
         // GET: Account/AccessDenied
         // =========================================
@@ -328,14 +350,12 @@ namespace WebCar.Controllers
         [AllowAnonymous]
         public ActionResult AccessDenied()
         {
-            // Ghi log ngay khi vào trang
             if (Session["CustomerId"] != null)
             {
                 try
                 {
                     int userId = (int)Session["CustomerId"];
                     string attemptedUrl = Request.UrlReferrer?.ToString() ?? "Unknown";
-
                     LogAccessDeniedToDatabase(userId, attemptedUrl);
                 }
                 catch (Exception ex)
@@ -386,7 +406,7 @@ namespace WebCar.Controllers
                 INSERT INTO AUDIT_LOG (MALOG, MATK, HANHDONG, BANGTACDONG, NGAYGIO, IP)
                 VALUES (SEQ_LOG.NEXTVAL, :matk, :hanhdong, 'ACCESS_DENIED', SYSDATE, :ip)", conn);
 
-                    string actionDetails = $"ACCESS_DENIED: {url}";
+                    string actionDetails = $"ACCESS_DENIED:  {url}";
                     if (!string.IsNullOrEmpty(referrer))
                     {
                         actionDetails += $" | Referrer: {referrer}";
@@ -408,7 +428,7 @@ namespace WebCar.Controllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"❌ Error logging access denied: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"❌ Error logging access denied:  {ex.Message}");
             }
         }
 

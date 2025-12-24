@@ -9,7 +9,7 @@ using WebCar.Models.ViewModels;
 
 namespace WebCar.Controllers
 {
-    [AuthorizeRole("ADMIN")]
+    [AuthorizeRole("ADMIN","MANAGER")]
     public class AdminController : Controller
     {
         private readonly CustomerRepository _customerRepo;
@@ -83,6 +83,7 @@ namespace WebCar.Controllers
         }
 
         // POST: Admin/ChangeUserRole
+        [AuthorizeRole("ADMIN")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult ChangeUserRole(int userId, string newRole)
@@ -120,6 +121,7 @@ namespace WebCar.Controllers
         }
 
         // POST: Admin/DeleteUser
+        [AuthorizeRole("ADMIN")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult DeleteUser(int userId)
@@ -211,6 +213,7 @@ namespace WebCar.Controllers
         }
 
         // POST: Admin/CreateProduct
+        [AuthorizeRole("ADMIN")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult CreateProduct(CAR model)
@@ -235,6 +238,7 @@ namespace WebCar.Controllers
         }
 
         // POST: Admin/UpdateProduct
+        [AuthorizeRole("ADMIN")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult UpdateProduct(CAR model)
@@ -259,6 +263,7 @@ namespace WebCar.Controllers
         }
 
         // POST: Admin/UpdateProductStatus
+        [AuthorizeRole("ADMIN")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult UpdateProductStatus(int productId, string newStatus)
@@ -296,6 +301,7 @@ namespace WebCar.Controllers
         }
 
         // POST: Admin/DeleteProduct
+        [AuthorizeRole("ADMIN")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult DeleteProduct(int productId)
@@ -361,6 +367,7 @@ namespace WebCar.Controllers
         // ==================== SECURITY ====================
 
         // GET: Admin/Security
+        [AuthorizeRole("ADMIN")]
         public ActionResult Security()
         {
             try
@@ -687,7 +694,7 @@ namespace WebCar.Controllers
             return orders;
         }
 
-        // ✅ ĐÚNG VỊ TRÍ: Helper method log admin actions
+        //  ĐÚNG VỊ TRÍ: Helper method log admin actions
         private void LogAdminAction(string action)
         {
             try

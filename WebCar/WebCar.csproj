@@ -172,6 +172,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuditController.cs" />
+    <Compile Include="Controllers\BackupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\RSAEncryptionHelper.cs" />
     <Compile Include="Helpers\SecurityContextHelper.cs" />
     <Compile Include="Models\ACCOUNT_ROLE.cs" />
     <Compile Include="Models\AUDIT_LOG.cs" />
@@ -2328,6 +2330,7 @@
     <Content Include="images\energy2.jpg" />
     <Content Include="images\energy3.jpg" />
     <Content Include="images\energy4.png" />
+    <Content Include="images\favicon.png" />
     <Content Include="images\gioithieu.png" />
     <Content Include="images\logo.png" />
     <Content Include="images\messenger.jpg" />
@@ -2487,6 +2490,7 @@
     <Content Include="Views\Admin\Security.cshtml" />
     <Content Include="Views\Admin\AccessDenied.cshtml" />
     <Content Include="Views\Account\AccessDenied.cshtml" />
+    <Content Include="Views\Backup\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

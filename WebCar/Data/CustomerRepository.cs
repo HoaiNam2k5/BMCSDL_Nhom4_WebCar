@@ -139,6 +139,66 @@ namespace WebCar.Data
             }
         }
 
+        // ======================  SET VPD SECURITY CONTEXT ======================
+        public void SetSecurityContext(int customerId, string roleName)
+        {
+            try
+            {
+                using (var conn = new OracleConnection(connStr))
+                {
+                    conn.Open();
+
+                    using (var cmd = new OracleCommand(@"
+                        BEGIN 
+                            PKG_CARSALE_SECURITY.SET_USER_CONTEXT(:userId, :role); 
+                        END;", conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.Add("userId", OracleDbType.Int32).Value = customerId;
+                        cmd.Parameters.Add("role", OracleDbType.Varchar2).Value = roleName ?? "CUSTOMER";
+
+                        cmd.ExecuteNonQuery();
+
+                        System.Diagnostics.Debug.WriteLine($"✅ Security context set:  User {customerId}, Role {roleName}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ SetSecurityContext Error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack:  {ex.StackTrace}");
+                throw;
+            }
+        }
+
+        // ======================  CLEAR VPD SECURITY CONTEXT ======================
+        public void ClearSecurityContext()
+        {
+            try
+            {
+                using (var conn = new OracleConnection(connStr))
+                {
+                    conn.Open();
+
+                    using (var cmd = new OracleCommand(@"
+                        BEGIN 
+                            PKG_CARSALE_SECURITY.CLEAR_USER_CONTEXT; 
+                        END;", conn))
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.ExecuteNonQuery();
+
+                        System.Diagnostics.Debug.WriteLine($"✅ Security context cleared");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ ClearSecurityContext Error: {ex.Message}");
+                // Don't throw - clearing context is not critical
+            }
+        }
+
         // ====================== LẤY THÔNG TIN CUSTOMER THEO ID ======================
         public CUSTOMER GetCustomerById(int customerId)
         {
@@ -190,7 +250,7 @@ namespace WebCar.Data
                         SET HOTEN = :hoten,
                             SDT = :sdt,
                             DIACHI = :diachi
-                        WHERE MAKH = :makh", conn))
+                        WHERE MAKH = : makh", conn))
                     {
                         cmd.Parameters.Add("hoten", OracleDbType.Varchar2).Value = customer.HOTEN;
                         cmd.Parameters.Add("sdt", OracleDbType.Varchar2).Value = customer.SDT;
@@ -241,7 +301,7 @@ namespace WebCar.Data
                     // Kiểm tra mật khẩu cũ có đúng không
                     using (var checkCmd = new OracleCommand(@"
                         SELECT COUNT(*) FROM CUSTOMER 
-                        WHERE MAKH = :makh AND MATKHAU = :oldPassword", conn))
+                        WHERE MAKH = :makh AND MATKHAU = : oldPassword", conn))
                     {
                         checkCmd.Parameters.Add("makh", OracleDbType.Int32).Value = customerId;
                         checkCmd.Parameters.Add("oldPassword", OracleDbType.Varchar2).Value = oldPasswordHash;
@@ -264,8 +324,8 @@ namespace WebCar.Data
                     // Cập nhật mật khẩu mới
                     using (var updateCmd = new OracleCommand(@"
                         UPDATE CUSTOMER 
-                        SET MATKHAU = :newPassword
-                        WHERE MAKH = :makh", conn))
+                        SET MATKHAU = : newPassword
+                        WHERE MAKH = : makh", conn))
                     {
                         updateCmd.Parameters.Add("newPassword", OracleDbType.Varchar2).Value = newPasswordHash;
                         updateCmd.Parameters.Add("makh", OracleDbType.Int32).Value = customerId;

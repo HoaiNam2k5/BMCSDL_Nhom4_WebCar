@@ -1,249 +1,129 @@
 ﻿@model WebCar.Models.ViewModels.OrderDetailViewModel
 
-@{
-    ViewBag.Title = "Chi Tiết Đơn Hàng #" + Model.MaDon;
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
 <div class="container mt-5 pt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="@Url.Action("Index", "Home")">
-                            <i class="fas fa-home"></i> Trang chủ
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="@Url.Action("MyOrders", "Order")">Đơn hàng của tôi</a>
-                    </li>
-                    <li class="breadcrumb-item active">Chi tiết #@Model.MaDon</li>
-                </ol>
-            </nav>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-file-invoice me-2"></i>
+                Chi tiết đơn hàng #@Model.MaDon
+            </h4>
+        </div>
 
-            <!-- Messages -->
-            @if (TempData["SuccessMessage"] != null)
+        <div class="card-body">
+            <!-- Order Info -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Thông tin đơn hàng</h5>
+                    <table class="table table-sm">
+                        <tr>
+                            <td><strong>Mã đơn: </strong></td>
+                            <td>#@Model.MaDon</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ngày đặt:</strong></td>
+                            <td>@Model.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Trạng thái:</strong></td>
+                            <td><span class="@Model.TrangThaiClass">@Model.TrangThai</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tổng tiền:</strong></td>
+                            <td class="text-danger fw-bold">@Model.TongTien.ToString("N0") VNĐ</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Thông tin khách hàng</h5>
+                    <table class="table table-sm">
+                        <tr>
+                            <td><strong>Họ tên:</strong></td>
+                            <td>@Model.HoTen</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email:</strong></td>
+                            <td>@Model.Email</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SĐT:</strong></td>
+                            <td>@Model.SDT</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Địa chỉ: </strong></td>
+                            <td>@Model.DiaChi</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ✅ Car Info - Handle Missing Car -->
+            @if (Model.MaXe > 0)
             {
-                <div class="alert alert-success alert-dismissible fade show">
-                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <h5>Thông tin xe</h5>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        @{
+                            string imagePath = "~/images/" + (Model.HinhAnh ?? "default-car.jpg").Replace("images/", "");
+                        }
+                        <img src="@Url.Content(imagePath)"
+                             alt="@Model.TenXe"
+                             class="img-fluid rounded"
+                             onerror="this.src='@Url.Content("~/images/default-car.jpg")'" />
+                    </div>
+                    <div class="col-md-9">
+                        <h5>@Model.TenXe</h5>
+                        <p class="text-muted">@Model.HangXe</p>
+                        <p><strong>Số lượng:</strong> @Model.SoLuong</p>
+                        <p><strong>Đơn giá: </strong> @Model.DonGia.ToString("N0") VNĐ</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Thông tin xe không khả dụng cho đơn hàng này
                 </div>
             }
 
-            @if (TempData["ErrorMessage"] != null)
+            <!-- Shipping Info -->
+            @if (!string.IsNullOrEmpty(Model.DiaChiGiaoHang) || !string.IsNullOrEmpty(Model.SoDienThoai))
             {
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <h5>Thông tin giao hàng</h5>
+                <div class="alert alert-info">
+                    @if (!string.IsNullOrEmpty(Model.DiaChiGiaoHang))
+                    {
+                        <p><i class="fas fa-map-marker-alt me-2"></i><strong>Địa chỉ:</strong> @Model.DiaChiGiaoHang</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.SoDienThoai))
+                    {
+                        <p><i class="fas fa-phone me-2"></i><strong>SĐT:</strong> @Model.SoDienThoai</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.GhiChu))
+                    {
+                        <p><i class="fas fa-comment me-2"></i><strong>Ghi chú:</strong>@Model.GhiChu</p>
+                    }
                 </div>
             }
 
-            <!-- Order Header -->
-            <div class="card shadow-lg mb-4">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-file-invoice me-2"></i>
-                        Đơn Hàng #@Model.MaDon
-                    </h4>
-                    <span class="badge bg-light text-dark fs-6">
-                        @Model.NgayDat.ToString("dd/MM/yyyy HH:mm")
-                    </span>
-                </div>
+            <!-- Actions -->
+            <div class="mt-4">
+                <a href="@Url.Action("MyOrders")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Quay lại
+                </a>
 
-                <div class="card-body p-4">
-                    <div class="row">
-                        <!-- Thông tin khách hàng -->
-                        <div class="col-md-6 mb-4">
-                            <h5 class="text-primary mb-3">
-                                <i class="fas fa-user me-2"></i>Thông Tin Khách Hàng
-                            </h5>
-                            <div class="info-box p-3 border rounded bg-light">
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-user-circle me-2"></i>Họ tên:</strong><br />
-                                    @Model.HoTen
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-envelope me-2"></i>Email:</strong><br />
-                                    @Model.Email
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-phone me-2"></i>Số điện thoại:</strong><br />
-                                    @Model.SDT
-                                </p>
-                                <p class="mb-0">
-                                    <strong><i class="fas fa-map-marker-alt me-2"></i>Địa chỉ:</strong><br />
-                                    @Model.DiaChi
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Trạng thái đơn hàng -->
-                        <div class="col-md-6 mb-4">
-                            <h5 class="text-primary mb-3">
-                                <i class="fas fa-info-circle me-2"></i>Trạng Thái Đơn Hàng
-                            </h5>
-                            <div class="status-box p-3 border rounded bg-light">
-                                <div class="mb-3">
-                                    <span class="badge @(Model.TrangThai == "Cho xu ly" ? "bg-warning" :
-                                                          Model.TrangThai == "Dang xu ly" ? "bg-info" :
-                                                          Model.TrangThai == "Hoan thanh" ? "bg-success" : "bg-danger") fs-5">
-                                        @(Model.TrangThai == "Cho xu ly" ? "Chờ xử lý" :
-                                          Model.TrangThai == "Dang xu ly" ? "Đang xử lý" :
-                                          Model.TrangThai == "Hoan thanh" ? "Hoàn thành" : "Đã hủy")
-                                    </span>
-                                </div>
-
-                                <!-- Timeline -->
-                                <div class="timeline">
-                                    <div class="timeline-item @(Model.TrangThai != "Da huy" ? "active" : "")">
-                                        <i class="fas fa-check-circle"></i>
-                                        <span>Đơn hàng đã tạo</span>
-                                    </div>
-                                    <div class="timeline-item @(Model.TrangThai == "Dang xu ly" || Model.TrangThai == "Hoan thanh" ? "active" : "")">
-                                        <i class="fas fa-cog"></i>
-                                        <span>Đang xử lý</span>
-                                    </div>
-                                    <div class="timeline-item @(Model.TrangThai == "Hoan thanh" ?  "active" : "")">
-                                        <i class="fas fa-check-double"></i>
-                                        <span>Hoàn thành</span>
-                                    </div>
-                                </div>
-
-                                <!-- Nút hủy đơn -->
-                                @if (Model.TrangThai == "Cho xu ly")
-                                {
-                                    using (Html.BeginForm("Cancel", "Order", new { id = Model.MaDon }, FormMethod.Post,
-                                        new { @class = "mt-3", onsubmit = "return confirm('Bạn có chắc muốn hủy đơn hàng này? ');" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-danger btn-sm w-100">
-                                            <i class="fas fa-times-circle me-2"></i>
-                                            Hủy Đơn Hàng
-                                        </button>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="my-4" />
-
-                    <!-- Thông tin sản phẩm -->
-                    <h5 class="text-primary mb-3">
-                        <i class="fas fa-car me-2"></i>Chi Tiết Sản Phẩm
-                    </h5>
-
-                    <div class="row product-detail">
-                        <div class="col-md-5">
-                            @if (!string.IsNullOrEmpty(Model.HinhAnh))
-                            {
-                                <!-- ✅ MỚI: Đảm bảo đường dẫn đúng -->
-                                <img src="@Url.Content(string.IsNullOrEmpty(Model.HinhAnh) || Model.HinhAnh.StartsWith("~/")
-    ? Model.HinhAnh
-    : "~/images/" + Model.HinhAnh. Replace("images/", ""))"
-                                     alt="@Model.TenXe"
-                                     onerror="this.src='@Url.Content("~/images/no-image.jpg")'" />
-                            }
-                        </div>
-
-                        <div class="col-md-7">
-                            <h4 class="mb-3">@Model.TenXe</h4>
-                            <p class="text-muted mb-3">
-                                <i class="fas fa-building me-2"></i>
-                                Hãng: <strong>@Model.HangXe</strong>
-                            </p>
-
-                            <div class="product-info mb-3">
-                                <p class="mb-2">@Model.MoTa</p>
-                            </div>
-
-                            <table class="table table-borderless">
-                                <tbody>
-                                    <tr>
-                                        <td class="text-muted">Đơn giá:</td>
-                                        <td class="text-end"><strong>@Model.DonGia.ToString("N0") VNĐ</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted">Số lượng:</td>
-                                        <td class="text-end"><strong>@Model.SoLuong</strong></td>
-                                    </tr>
-                                    <tr class="table-primary">
-                                        <td><h5 class="mb-0">Tổng tiền:</h5></td>
-                                        <td class="text-end">
-                                            <h4 class="text-danger mb-0">@Model.TongTien.ToString("N0") VNĐ</h4>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="mt-4 d-flex justify-content-between">
-                        <a href="@Url.Action("MyOrders", "Order")" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left me-2"></i>
-                            Quay Lại
-                        </a>
-
-                        <a href="@Url.Action("Index", "Product")" class="btn btn-primary">
-                            <i class="fas fa-shopping-cart me-2"></i>
-                            Tiếp Tục Mua Sắm
-                        </a>
-                    </div>
-                </div>
+                @if (Model.TrangThai == "Cho xu ly")
+                {
+                    using (Html.BeginForm("Cancel", "Order", new { id = Model.MaDon }, FormMethod.Post, new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này? ')">
+                            <i class="fas fa-times-circle me-2"></i> Hủy đơn hàng
+                        </button>
+                    }
+                }
             </div>
         </div>
     </div>
 </div>
-
-@section Styles {
-    <style>
-        .info-box, .status-box {
-            background: #f8f9fa;
-        }
-
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0.5;
-        }
-
-            .timeline-item.active {
-                opacity: 1;
-                font-weight: bold;
-                color: #0066cc;
-            }
-
-            .timeline-item i {
-                font-size: 1.2rem;
-            }
-
-        .product-detail img {
-            max-height: 300px;
-            width: 100%;
-            object-fit: cover;
-        }
-    </style>
-}
-
-@section Scripts {
-    <script>
-        $(document).ready(function() {
-            setTimeout(function() {
-                $('. alert').fadeOut('slow');
-            }, 5000);
-
-            console.log('✅ Order Details page loaded');
-        });
-    </script>
-}
