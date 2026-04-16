@@ -1,4 +1,5 @@
 <img width="1137" height="1161" alt="home-page" src="https://github.com/user-attachments/assets/261dde8b-09e9-4be4-93ec-18ff22f10a6a" />
+
 # AutoHub Oracle System
 
 ## Introduction
@@ -149,7 +150,6 @@ erDiagram
         VARCHAR2 TABLE_NAME
         NUMBER ROW_COUNT
     }
-
 ```
 
 ---
