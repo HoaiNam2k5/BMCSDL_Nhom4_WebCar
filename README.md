@@ -1,31 +1,49 @@
 <img width="1137" height="1161" alt="home-page" src="https://github.com/user-attachments/assets/261dde8b-09e9-4be4-93ec-18ff22f10a6a" />
 
-# AutoHub Oracle System
+# 🚗 AutoHub: Enterprise-Grade Car Sales System
 
-## Introduction
-AutoHub Oracle System is a car sales management web application built with **ASP.NET MVC** and **Oracle Database**. This system not only provides standard e-commerce functionalities (managing cars, orders, and customers) but also heavily focuses on advanced database-level security features.
+## 📖 The Story: Why AutoHub?
+In the fast-paced automotive e-commerce industry, **User Experience** and **Data Security** must go hand in hand. AutoHub was born to solve a dual challenge: providing a seamless, intuitive car purchasing journey for customers while enforcing strict, enterprise-level data protection under the hood. 
 
-## Key Features
-- **Account Management & Authorization**: Role-based access control (RBAC) utilizing the `ACCOUNT_ROLE` table.
-- **Car Inventory Management**: CRUD operations for vehicle information.
-- **Customer Management**: Secure storage and management of customer data.
-- **Order Management**: Create and track order statuses with detailed line items.
-- **Feedback**: User rating and review system for cars.
-- **Advanced Oracle Database Security**: 
-  - Asymmetric Encryption for sensitive data (`DBMS_CRYPTO`).
-  - Virtual Private Database (VPD) & Mandatory Access Control (MAC).
-- **Audit Logging & Backup**: 
-  - Comprehensive system activity tracking via `AUDIT_LOG`.
-  - Automated table backup mechanisms (`BACKUP_METADATA`, `BACKUP_TABLE_DETAILS` and `BKP_*` historical tables).
+By leveraging **ASP.NET MVC** for a robust backend and **Oracle Database** for uncompromised security, AutoHub demonstrates how a standard e-commerce flow can be fortified against insider threats, data breaches, and unauthorized access using state-of-the-art Database Security mechanisms.
 
-## Tech Stack
+---
+
+## 🔄 Core Business Flow
+The system is designed around a clear, real-world e-commerce lifecycle:
+
+1. **🛍️ Discovery (Guest/Customer):** Users browse the vehicle catalog, view detailed car specifications, pricing, and read feedback from previous buyers.
+2. **🔐 Authentication & Role Assignment:** Users register/login. The system authenticates them and dynamically assigns database-level roles (RBAC) and Security Labels (VPD/MAC).
+3. **🛒 Purchasing (Customer):** Customers place orders. Sensitive checkout data (like passwords or personal info) is encrypted symmetrically/asymmetrically at the database layer before storage.
+4. **💬 Post-Purchase (Customer):** After a successful transaction, customers can leave ratings and feedback for the cars they purchased.
+5. **⚙️ Administration & Monitoring (Admin):** Admins access a dedicated dashboard to manage inventory (Cars), track Orders, and monitor system health. Every critical action triggers a Fine-Grained Audit (FGA) log, ensuring complete traceability.
+
+---
+
+## ✨ Highlighted Features
+
+### 🏢 Business Functionalities
+- **Vehicle Catalog Management:** Full CRUD operations for car listings with detailed specs and images.
+- **Order Processing:** End-to-end order tracking, from cart to final delivery status.
+- **Customer Profiles:** Secure storage of customer history and order tracking.
+- **Interactive Feedback System:** Allow users to rate and review vehicles, building community trust.
+
+### 🛡️ Enterprise Security Functionalities (Oracle DB)
+- **Virtual Private Database (VPD):** Row-level security ensures that customers can only query and view their own orders, while admins have global access.
+- **Mandatory Access Control (MAC):** Custom implementation of Security Labels (Levels & Compartments) assigning read/write boundaries based on user clearance.
+- **Asymmetric Encryption:** Sensitive data is actively encrypted using `DBMS_CRYPTO` to prevent data leaks even if the physical database is compromised.
+- **Comprehensive Audit Logging:** Triggers and Oracle FGA (Fine-Grained Auditing) automatically log unauthorized access attempts, login failures, and critical data modifications.
+
+---
+
+## 🛠️ Tech Stack
 - **Backend:** ASP.NET MVC 5.2.9, .NET Framework 4.8, Entity Framework 6.5.1, Oracle.ManagedDataAccess (23.26.0).
 - **Frontend:** Bootstrap 5.2.3, jQuery 3.7.0.
 - **Database:** Oracle Database 19c/21c.
 
 ---
 
-## Entity-Relationship Diagram (ERD)
+## 📊 Entity-Relationship Diagram (ERD)
 Below is the comprehensive database schema based on the Oracle tables. This structure is essential for setting up Entity Framework ORM on the backend.
 
 *(Note: Historical backup tables prefixed with `BKP_` such as `BKP_CAR_1`, `BKP_CUSTOMER_1`, etc., are omitted from the diagram for clarity but are managed by the backup metadata tables).*  
@@ -154,9 +172,9 @@ erDiagram
 
 ---
 
-## Database Setup & SQL Scripts
+## ⚙️ Database Setup & SQL Scripts
 
-To get the backend up and running, you need to configure the Oracle Database by executing the provided scripts in the following order.
+To get the backend up and running, you need to configure the Oracle Database by executing the provided scripts in the following order:
 
 ### 1. User Creation & Privilege Granting (`orcl~1.sql`)
 Execute this script using a DBA account (e.g., `SYSTEM/SYSDBA`). It handles the creation of the `CARSALE` user and grants necessary privileges, including VPD, MAC, and Auditing rights.
@@ -172,7 +190,7 @@ This is the full database backup containing the DDL (tables, views, sequences) a
 
 ---
 
-## Backend Integration Guide
+## 🔌 Backend Integration Guide
 
 **1. Database Connection String**
 Open the `Web.config` file in the `WebCar` project. Update the `<connectionStrings>` block to match your local Oracle instance:
@@ -192,19 +210,19 @@ The backend must set the Oracle Application Context immediately after opening a 
 
 ---
 
-## Screenshots & Demo (Backend Notes)
+## 📸 Screenshots & Demo (Backend Notes)
 
-### 1. Home Page
+### 1. Discovery & Browsing (Home Page)
 <img width="1137" height="1161" alt="home-page" src="https://github.com/user-attachments/assets/99fa9bbd-54d0-4173-9e29-e890be8a9c2e" />
 
 > **Backend Integration Note:** The `Index` action fetches the list of available cars via Entity Framework from the `CAR` table. If VPD is active, the database automatically filters out records the current DB session doesn't have the `SECURITY_LEVEL` to view.
 
-### 2. Admin Dashboard
+### 2. Administration & Monitoring (Admin Dashboard)
 <img width="1197" height="1026" alt="admin-dashboard" src="https://github.com/user-attachments/assets/7b6695d3-e7f4-4e13-b172-db43d1495687" />
 
 > **Backend Integration Note:** Accessing this dashboard requires the `CARSALE_ADMIN_ROLE`. The backend aggregates data from `CUSTOMER`, `CAR`, and `ORDERS` tables. It also provides quick access to manage Data Security Labels, Users, and initiate Backup & Restore processes.
 
-### 3. Security & Audit Logs
+### 3. Traceability & Protection (Security & Audit Logs)
 <img width="2549" height="3023" alt="audit-logs" src="https://github.com/user-attachments/assets/a0749591-b40f-4480-a1b4-21087a2e95be" />
 
 > **Backend Integration Note:** 
@@ -213,7 +231,7 @@ The backend must set the Oracle Application Context immediately after opening a 
 
 ---
 
-## Author
+## 👨‍💻 Author
 
 - **Hoài Nam**
 - GitHub: [HoaiNam2k5](https://github.com/HoaiNam2k5)
