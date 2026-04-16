@@ -1,3 +1,4 @@
+<img width="1137" height="1161" alt="home-page" src="https://github.com/user-attachments/assets/261dde8b-09e9-4be4-93ec-18ff22f10a6a" />
 # AutoHub Oracle System
 
 ## Introduction
@@ -148,7 +149,7 @@ erDiagram
         VARCHAR2 TABLE_NAME
         NUMBER ROW_COUNT
     }
-}
+
 ```
 
 ---
@@ -194,15 +195,18 @@ The backend must set the Oracle Application Context immediately after opening a 
 ## Screenshots & Demo (Backend Notes)
 
 ### 1. Home Page
-![Home Page](images/home-page.png)
+<img width="1137" height="1161" alt="home-page" src="https://github.com/user-attachments/assets/99fa9bbd-54d0-4173-9e29-e890be8a9c2e" />
+
 > **Backend Integration Note:** The `Index` action fetches the list of available cars via Entity Framework from the `CAR` table. If VPD is active, the database automatically filters out records the current DB session doesn't have the `SECURITY_LEVEL` to view.
 
 ### 2. Admin Dashboard
-![Admin Dashboard](images/admin-dashboard.png)
+<img width="1197" height="1026" alt="admin-dashboard" src="https://github.com/user-attachments/assets/7b6695d3-e7f4-4e13-b172-db43d1495687" />
+
 > **Backend Integration Note:** Accessing this dashboard requires the `CARSALE_ADMIN_ROLE`. The backend aggregates data from `CUSTOMER`, `CAR`, and `ORDERS` tables. It also provides quick access to manage Data Security Labels, Users, and initiate Backup & Restore processes.
 
 ### 3. Security & Audit Logs
-![Security & Audit Logs](images/audit-logs.png)
+<img width="2549" height="3023" alt="audit-logs" src="https://github.com/user-attachments/assets/a0749591-b40f-4480-a1b4-21087a2e95be" />
+
 > **Backend Integration Note:** 
 > - **Auditing:** Fine-Grained Auditing (FGA) and triggers capture every critical event (`LOGIN`, `UPDATE`, `ACCESS_DENIED`, etc.). These events are directly logged into the `AUDIT_LOG` table and surfaced on this admin view.
 > - **Encryption:** Custom logs also indicate events like `CREATE_ORDER_ENCRYPTED`, verifying that sensitive customer data or order details are securely encrypted at the database level using `SYS.DBMS_CRYPTO` before being persisted.
